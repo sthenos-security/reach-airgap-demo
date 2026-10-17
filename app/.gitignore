@@ -1,0 +1,7 @@
+data/
+uploads/
+portal/node_modules/
+portal/dist/
+payments-api/treasury-api
+docs-worker/__pycache__/
+risk-api/build/

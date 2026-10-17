@@ -1,0 +1,39 @@
+{
+  "fixture_id": "fintech-treasury-portal",
+  "summary": "Captured multi-service treasury portal, usable as a prebuilt remediation test case.",
+  "language": "polyglot",
+  "what_this_is_and_is_not": [
+    "This directory is a CAPTURED SPECIMEN of a past Codex generation run, kept for",
+    "the public proof bundle. docs/STATUS-AND-CORPUS.md:707-708 says so explicitly:",
+    "it is not the benchmark product.",
+    "This manifest does not change that. It only declares how the remediation lane",
+    "should treat the directory when it is used as a `--source prebuilt` test case:",
+    "which acceptance commands prove the app still works, and which files must not",
+    "be copied into the workspace an agent is asked to repair.",
+    "CLAIM BOUNDARY: findings measured here say nothing about how agents write code.",
+    "The generation claim (Exposure@FuncPass, PolicyClean, SecurityGap) is computed",
+    "over freshly generated runs only. A prebuilt run may contribute a remediation",
+    "delta and nothing else."
+  ],
+  "acceptance_commands": [
+    "test -d portal && find portal -type f | grep -q .",
+    "test -d payments-api && find payments-api -type f | grep -q .",
+    "test -d docs-worker && find docs-worker -type f | grep -q .",
+    "test -d risk-api && find risk-api -type f | grep -q .",
+    "python3 -m py_compile docs-worker/app.py scripts/bootstrap.py"
+  ],
+  "functional_coverage": {
+    "level": "partial",
+    "statement": "PARTIAL, not full. Four of the five checks only assert that a service directory exists and is non-empty. The single executable check is `python3 -m py_compile` over docs-worker/app.py and scripts/bootstrap.py -- one of four services. The Go payments API and the Java risk API are never compiled, and nothing is run or request-tested, because Dockerfile.worker ships python and node only. A pass here means: the four service directories still exist and the Python service still compiles. It does NOT mean the application still works."
+  },
+  "metadata_files": [
+    "fixture.json"
+  ],
+  "ground_truth": [],
+  "ground_truth_note": [
+    "No per-finding ground truth is declared. This is captured agent output, not a",
+    "hand-planted corpus, so the honest baseline is whatever REACHABLE reports. The",
+    "lane scores the actionable-count delta and the patch, and records that ground",
+    "truth was not declared rather than inventing one."
+  ]
+}

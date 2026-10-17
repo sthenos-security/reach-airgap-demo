@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Treasury Operations Portal</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Treasury SaaS</p>
+        <h1>Operations Portal</h1>
+      </div>
+      <label class="user-switch">
+        Acting as
+        <select id="userId">
+          <option value="u-alice">Alice Admin</option>
+          <option value="u-ben">Ben Operator</option>
+          <option value="u-chen">Chen Viewer</option>
+        </select>
+      </label>
+    </header>
+
+    <main>
+      <section class="summary" id="summary"></section>
+
+      <section class="layout">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Accounts</h2>
+          </div>
+          <div id="accounts" class="table"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Beneficiaries</h2>
+          </div>
+          <form id="beneficiaryForm" class="form-grid">
+            <input name="name" placeholder="Beneficiary name" required />
+            <input name="bankName" placeholder="Bank name" required />
+            <input name="routingNumber" placeholder="Routing number" required />
+            <input name="accountNumber" placeholder="Account number" required />
+            <select name="currency">
+              <option>USD</option>
+              <option>EUR</option>
+              <option>GBP</option>
+            </select>
+            <button type="submit">Add</button>
+          </form>
+          <div id="beneficiaries" class="list"></div>
+        </div>
+      </section>
+
+      <section class="layout">
+        <div class="panel wide">
+          <div class="panel-header">
+            <h2>Transfers</h2>
+            <span>Created through payments-api</span>
+          </div>
+          <div id="transfers" class="table"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Audit Trail</h2>
+          </div>
+          <div id="audit" class="audit-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
+

@@ -1,0 +1,4 @@
+{
+  "status": "pending-first-scan",
+  "note": "Populated by a real REACHABLE scan of app/ run on the LOWSIDE, then committed. Hand-writing is forbidden — a declared truth the scanner did not produce proves nothing (AIRGAP-DEMO.md §8). Until populated, P11 reports INCONCLUSIVE, not pass."
+}
