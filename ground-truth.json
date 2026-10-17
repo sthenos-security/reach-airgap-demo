@@ -1,4 +1,17 @@
 {
-  "status": "pending-first-scan",
-  "note": "Populated by a real REACHABLE scan of app/ run on the LOWSIDE, then committed. Hand-writing is forbidden — a declared truth the scanner did not produce proves nothing (AIRGAP-DEMO.md §8). Until populated, P11 reports INCONCLUSIVE, not pass."
+  "status": "generated",
+  "generated_by": "reachable v1.0.0b220 lowside scan, 2026-10-17, scan #1 of app/ (db app-19d11f59)",
+  "note": "P11 asserts the enclave scan reproduces this table. Findings are counted per signal_type/severity/reachability from repo.db signals — the scanner's own words, never hand-written.",
+  "total_findings": 12,
+  "actionable_definition": "signal_type IN (cve,cwe) AND reachability IN (REACHABLE,EXPLOITABLE)",
+  "actionable": 6,
+  "by_type_severity_reachability": [
+    {"signal_type": "config", "severity": "LOW", "reachability": "REACHABLE", "count": 1},
+    {"signal_type": "cve", "severity": "MEDIUM", "reachability": "REACHABLE", "count": 2},
+    {"signal_type": "cwe", "severity": "CRITICAL", "reachability": "REACHABLE", "count": 1},
+    {"signal_type": "cwe", "severity": "MEDIUM", "reachability": "REACHABLE", "count": 3},
+    {"signal_type": "cwe", "severity": "HIGH", "reachability": "NOT_REACHABLE", "count": 2},
+    {"signal_type": "cwe", "severity": "MEDIUM", "reachability": "NOT_REACHABLE", "count": 2},
+    {"signal_type": "suspicious", "severity": "INFO", "reachability": "NOT_REACHABLE", "count": 1}
+  ]
 }
