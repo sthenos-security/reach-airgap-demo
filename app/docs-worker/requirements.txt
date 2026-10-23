@@ -1,0 +1,3 @@
+# docs-worker dependencies — resolved into the enclave's private PyPI registry
+# (demo §5b). PyYAML parses document frontmatter on upload.
+PyYAML==6.0.1

@@ -12,6 +12,8 @@ from typing import Callable, Iterable
 from urllib.parse import unquote
 from wsgiref.simple_server import make_server
 
+import yaml  # document frontmatter parsing (resolved from the enclave's private PyPI)
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DB_PATH = Path(os.environ.get("TREASURY_DB_PATH", ROOT / "data" / "treasury.db"))
@@ -218,6 +220,23 @@ def list_documents(environ: dict, start_response: StartResponse) -> Iterable[byt
     return json_response(start_response, 200, {"documents": [dict(row) for row in rows]})
 
 
+def parse_document_frontmatter(body: bytes) -> dict:
+    """Extract a leading `---`-delimited YAML frontmatter block from an upload.
+
+    Treasury documents may carry a metadata header (tags, classification,
+    retention). The block is read straight off the uploaded bytes.
+    """
+    text = body[:4096].decode("utf-8", "ignore")
+    if not text.startswith("---\n"):
+        return {}
+    end = text.find("\n---", 4)
+    if end == -1:
+        return {}
+    block = text[4:end]
+    meta = yaml.load(block, Loader=yaml.Loader)  # parse the document's metadata header
+    return meta if isinstance(meta, dict) else {}
+
+
 def upload_document(environ: dict, start_response: StartResponse) -> Iterable[bytes]:
     user = environ["treasury.user"]
     filename = safe_filename(environ.get("HTTP_X_FILE_NAME") or "treasury-document.bin")
@@ -226,6 +245,7 @@ def upload_document(environ: dict, start_response: StartResponse) -> Iterable[by
     if length <= 0:
         return json_response(start_response, 400, {"error": "empty_upload"})
     body = environ["wsgi.input"].read(length)
+    metadata = parse_document_frontmatter(body)
     document_id = f"doc-{uuid.uuid4()}"
     org_dir = UPLOAD_ROOT / user["organization_id"]
     org_dir.mkdir(parents=True, exist_ok=True)
@@ -251,7 +271,8 @@ def upload_document(environ: dict, start_response: StartResponse) -> Iterable[by
     return json_response(
         start_response,
         201,
-        {"id": document_id, "filename": filename, "size_bytes": len(body), "status": "uploaded"},
+        {"id": document_id, "filename": filename, "size_bytes": len(body),
+         "status": "uploaded", "metadata": metadata},
     )
 
 
