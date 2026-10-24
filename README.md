@@ -93,6 +93,21 @@ replaced by the customer's own on-premises model on the same offline lane — a
 configuration change, not a new architecture. The status page states this
 plainly rather than implying a capability that is mocked.
 
+## Keys — how this demo differs from a customer
+
+A real customer generates their mirror + enclave-host keys **through the Sthenos
+dashboard**, with only a single firewall hole to `sthenosec.com` (no internet):
+- **Model B (production):** the dashboard generates the Ed25519 keypairs **in the
+  browser** and the customer downloads the private halves — the private key never
+  reaches Sthenos, so Sthenos cannot impersonate their mirror or enclave.
+- **"Generate temporary test credentials" (evaluation):** a server-side, 30/60/90-day
+  option so a customer can try the full flow before provisioning their own keys.
+
+**This demo does neither.** Because it runs against the Sthenos-owned demo org, it
+**self-generates its keys in CI (a preflight-auth step)** — a convenience for our own
+org only, never the customer path. Full procedure + required dashboard changes:
+reach-core `docs/RUNBOOK-AIRGAP-ONBOARDING.md` §3–§3c.
+
 ---
 
 Architecture, assurance, and deployment questions: contact Sthenos Security.
