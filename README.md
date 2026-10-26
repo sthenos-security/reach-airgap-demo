@@ -21,7 +21,7 @@ Every page is generated from the run's own records, not written by hand. The
 
 ## What "air-gapped" means here
 
-An air-gapped network has **no road to the internet**. Banks, defence and
+An air-gapped network has **no road to the internet**. Banks, defense and
 critical-infrastructure teams build networks like this so that nothing inside
 can leak out and nothing outside can reach in. Most security tools quietly stop
 working there, because they expect to download updates and call online
@@ -55,7 +55,7 @@ shows that test.
 │ └────────┬─────────┘                     │ (no internet)    │            │
 │          │ findings                      └──────────────────┘            │
 │          ▼                                                               │
-│ ┌──────────────────┐   asks the model ONLY through the mirror            │
+│ ┌──────────────────┐   asks the model only via the mirror (▲ above)      │
 │ │ CODING AGENT     │ ──────────────────────────────────────►             │
 │ │ fixes the code   │                                                     │
 │ └────────┬─────────┘                                                     │
@@ -72,7 +72,7 @@ Step by step:
    two digital signatures, one of them quantum-resistant. The enclave checks
    both seals before installing anything. A tampered package is refused.
 2. **Security knowledge arrives the same way.** Today's vulnerability data and
-   the licence travel through the *mirror*, signed, so the enclave never has to
+   the license travel through the *mirror*, signed, so the enclave never has to
    go online to get them.
 3. **The application's building blocks come from inside.** The application
    uses third-party packages. The enclave gets them only from a *private
@@ -94,7 +94,7 @@ Step by step:
 | **One gatekeeper (the mirror) with a firewall** | Anything else slipping through. Its firewall blocks all traffic except two named destinations: Sthenos updates and the AI model. The rules are printed on the status page. |
 | **Double-signed software** | A tampered or fake package. Two signatures are checked before install; one is quantum-resistant. |
 | **Private package registry** | Pulling unknown code from the internet. It only serves files placed on it in advance and cannot fetch anything new. |
-| **Signed security data and licence** | Stale or forged vulnerability data. Older data is refused, so nobody can roll it back. |
+| **Signed security data and license** | Stale or forged vulnerability data. Older data is refused, so nobody can roll it back. |
 | **Nothing secret in this repository** | Keys, passwords and network details stay on the private operator side. This repository holds only the sample application and the published pages. |
 
 ## Words used on these pages
