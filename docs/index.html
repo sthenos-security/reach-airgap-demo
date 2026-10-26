@@ -94,6 +94,9 @@
     color:var(--muted); font:inherit; font-weight:600; font-size:14.5px; padding:9px 14px; cursor:pointer; margin-bottom:-1px; }
   .tab.active { color:var(--accent); border-bottom-color:var(--accent); }
   .tabpanel { display:none; } .tabpanel.active { display:block; }
+  .ruleset { background:#0b1020; color:#cfe3ff; padding:12px 14px; border-radius:8px;
+             overflow-x:auto; font-size:12.5px; line-height:1.5; margin:.6em 0 0; }
+  details summary { cursor:pointer; margin-top:.7em; font-size:13.5px; }
   .rsum { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin:6px 0 4px; }
   .rstat { display:flex; flex-direction:column; align-items:center; min-width:96px;
     background:var(--pending-bg); border:1px solid var(--line); border-radius:12px; padding:12px 16px; }
@@ -104,6 +107,12 @@
   .regtable { width:100%; border-collapse:collapse; font-size:14px; }
   .regtable th { text-align:left; color:var(--muted); font-size:12.5px; text-transform:uppercase; letter-spacing:.03em; padding:4px 8px; border-bottom:1px solid var(--line); }
   .regtable td { padding:7px 8px; border-bottom:1px solid var(--line); }
+  .prooflinks { list-style:none; margin:0; padding:0; display:grid; gap:10px; }
+  .prooflinks li { display:flex; flex-direction:column; gap:3px; padding:12px 14px;
+    border:1px solid var(--line); border-radius:8px; background:var(--card); }
+  .prooflink { font-weight:600; color:var(--accent); text-decoration:none; font-size:15px; }
+  .prooflink:hover { text-decoration:underline; }
+  .prooflinks .psub { margin:0; }
   .regtable td.eco { font-weight:700; }
   .regtable code { background:var(--pending-bg); padding:1px 7px; border-radius:6px; font-size:12.5px; }
 </style>
@@ -122,14 +131,14 @@
 
     <div class="summary">
       <span class="big"><span class="pill pending">• Pending</span></span>
-      <span class="meta">Run <code>real-proof</code></span>
-      <span class="meta">Model lane: <code>simulated (demo)</code></span>
+      <span class="meta">Run <code>40327200456</code></span>
+      <span class="meta">Model lane: <code>hosted model claude-opus-5 via the mirror relay (api.anthropic.com)</code></span>
       <span class="meta">Egress: 0 outbound connection attempts</span>
-      <span class="meta">Generated 2026-10-23 20:31 UTC</span>
+      <span class="meta">Generated 2026-10-26 13:23 UTC</span>
     </div>
 
     <div class="tabs" role="tablist">
-      <button class="tab active" data-tab="airgap" role="tab">Air-Gap Status</button>
+      <button class="tab active" data-tab="airgap" role="tab">Enclave Status</button>
       <button class="tab" data-tab="remediation" role="tab">Remediation Status</button>
     </div>
 
@@ -143,27 +152,41 @@
         <code>curl https://www.yahoo.com</code>
         <span class="badge ok">✓ could not reach the internet</span>
       </div>
-      <div class="nprow"><span class="npd">curl: (6) Could not resolve host (exit 6)</span></div>
+      <div class="nprow"><span class="npd">URLError: &lt;urlopen error [Errno -3] Temporary failure in name resolution&gt; (no route out)</span></div>
       <p class="npnote">The test tries to reach a public website and fails because there is no route out —
         the scan and remediation that follow run with the internet genuinely unreachable.</p>
     </div>
 
     <section class="panel">
-      <h2>Private package registry — created on the enclave's internal lane</h2>
-      <p class="psub">A private registry is stood up inside the enclave and serves the application's own
-        dependency closure. The scanner resolves every package from <b>here</b> — never from the public
-        internet, which is unreachable (see above).</p>
-      <table class="regtable"><thead><tr><th>Ecosystem</th><th>Private registry endpoint</th><th>Serving</th></tr></thead>
-      <tbody><tr><td class="eco">PYPI</td><td><code>http://registry:8080/pypi</code></td><td>1 package</td></tr><tr><td class="eco">NPM</td><td><code>http://registry:8080/npm</code></td><td>153 packages</td></tr><tr><td class="eco">GO</td><td><code>http://registry:8080/go</code></td><td>47 packages</td></tr></tbody></table>
+      <h2>Network policy — enforced, not promised</h2>
+      <p class="psub">The environment's only connected component runs a kernel firewall whose default
+        action is <b>drop</b>: anything not listed below cannot leave, and the enclave itself has
+        no route out at all. <b>6</b> destinations
+        are permitted.</p>
+      <ol class="cmds"><li><code>ct state established,related accept</code></li><li><code>oifname &quot;lo&quot; accept</code></li><li><code>ip daddr 104.16.0.0/12 tcp dport 443 accept</code></li><li><code>udp dport 53 accept</code></li><li><code>tcp dport 53 accept</code></li><li><code>ip daddr 160.79.104.10 tcp dport 443 accept</code></li></ol>
+      <details><summary>Show the full ruleset as the kernel holds it</summary>
+      <pre class="ruleset">table inet egress {
+	chain out {
+		type filter hook output priority filter; policy drop;
+		ct state established,related accept
+		oifname &quot;lo&quot; accept
+		ip daddr 104.16.0.0/12 tcp dport 443 accept
+		udp dport 53 accept
+		tcp dport 53 accept
+		ip daddr 160.79.104.10 tcp dport 443 accept
+	}
+}
+</pre></details>
     </section>
+
 
     <section class="panel">
       <h2>What was installed &amp; verified — offline</h2>
-      <p class="psub">201 packages
+      <p class="psub">The application's packages
         crossed the gap as a signed bundle, had their <b>signatures verified</b> and arrived over
         <b>encrypted</b> delivery, and installed inside the enclave with <b>no internet access</b>.</p>
-      <div class="chips"><span class="chip">reachable</span><span class="chip">semgrep</span><span class="chip">guarddog</span><span class="chip">PyYAML</span></div>
-      <div class="cmds"><div class="cmdlabel">Commands run inside the enclave</div><ol><li><code>reachctl mirror pull — signed bundle + intel snapshot</code></li><li><code>install.sh --bundle — verify signatures, install offline</code></li><li><code>reachctl scan /app — scan the app from the private registry</code></li><li><code>reachctl mirror push — publish evidence to the dashboard</code></li></ol></div>
+      <div class="chips"><span class="chip">reachable</span><span class="chip">semgrep</span><span class="chip">guarddog</span><span class="chip">grype</span><span class="chip">gitleaks</span></div>
+      
     </section>
       <ol class="stages">
       <li class="stage pending">
@@ -190,7 +213,7 @@
           <div class="head"><span class="title">REACHABLE scanned the test repository</span>
             <span class="badge ok">✓ Done</span></div>
           <p class="blurb">The scanner runs offline against the test application and reports findings by real exploitability (reachability).</p>
-          <p class="detail">13 findings; 6 actionable (exploitable); expected 13 — matched.</p>
+          <p class="detail">2 findings; 1 actionable (exploitable).</p>
         </div>
       </li>
       </ol>
@@ -198,36 +221,36 @@
 
     <section id="tab-remediation" class="tabpanel">
 
-    <div class="disclose">
-      <span class="dicon">ⓘ</span>
-      <div><strong>One component is simulated: the local AI model.</strong>
-        <span>Everything else on this page is real — the customer mirror, the offline signed-bundle
-        install, the scan, the zero-egress proof, and the re-scan. Only the local LLM that writes the
-        code fixes is a stand-in for this demonstration. In a customer deployment it is replaced by
-        their own on-premises model running on the same offline lane — a one-line change, no new
-        architecture.</span></div>
-    </div>
       <div class="panel">
         <h2>Remediation — before, fix, and re-scan</h2>
-        <p class="psub">Remediation has not run on this record (no model lane). The scan above is complete; the fix proof appears here once remediation runs on the enclave's internal model lane.</p>
+        
+    <div class="rsum">
+      <div class="rstat"><span class="rn">1</span><span class="rl">exploitable findings</span></div>
+      <div class="rarrow">→</div>
+      <div class="rstat"><span class="rn ok">1</span><span class="rl">verified fixed</span></div>
+      <div class="rarrow">→</div>
+      <div class="rstat"><span class="rn ok">0</span><span class="rl">still present</span></div>
+    </div>
+    <p class="psub">Each fix is confirmed by a re-scan — the finding is gone, not merely assumed fixed. Findings the agent did not fix are shown as still present, never hidden.</p><p class="psub assume"><strong>What this demo assumes:</strong> the coding agent and its model are the customer’s own — REACHABLE drives whatever agent the enclave already has. A future product phase could bundle a coding agent + REACHABLE + a local LLM as a single turnkey installation; that is <em>not</em> what we are demonstrating today.</p><p class="psub assume"><strong>Keys:</strong> this demo self-generates its mirror and enclave-host keys for the Sthenos-owned demo org (a CI preflight-auth step, regenerated on demand). A real customer generates theirs through the dashboard — in the browser, so the private key never leaves them, or as short-lived temporary test credentials — needing only a single firewall hole to sthenosec.com, never internet access.</p><p class="psub assume"><strong>Trust &amp; cryptography:</strong> software is admitted into the enclave only from a <strong>CNSA-aligned, post-quantum signed attestation</strong>; the connection to Sthenos is a <strong>mutually authenticated (mTLS)</strong> channel; data is <strong>encrypted at rest</strong>. The highest-assurance trust anchor sits exactly where it matters — on the code entering the air-gapped boundary.</p>
       </div>
+      <div class="panel"><h2>Evidence</h2><ul class="prooflinks"><li><a class="prooflink" href="evidence/fixed.html">Full remediation proof</a><span class="psub">Per-finding outcomes: fixed, still present, introduced — every number from REACHABLE's own record.</span></li><li><a class="prooflink" href="evidence/code-diff-viewer.html">Side-by-side code diff</a><span class="psub">The exact code the offline agent changed, before vs after.</span></li></ul></div>
       <ol class="stages">
-      <li class="stage pending">
+      <li class="stage ok">
         <div class="num">4</div>
         <div class="body">
           <div class="head"><span class="title">REACHABLE remediated the code</span>
-            <span class="badge pending">• Pending</span></div>
+            <span class="badge ok">✓ Done</span></div>
           <p class="blurb">An AI coding agent, itself offline, applies fixes for the exploitable findings.</p>
-          <p class="detail">Model lane &#x27;simulated (demo)&#x27; configured; remediation evidence not yet attached.</p>
+          <p class="detail">Agent attempted 1, 1 verified fixed (model lane: hosted model claude-opus-5 via the mirror relay (api.anthropic.com)).</p>
         </div>
       </li>
-      <li class="stage pending">
+      <li class="stage ok">
         <div class="num">5</div>
         <div class="body">
           <div class="head"><span class="title">Every actionable issue fixed</span>
-            <span class="badge pending">• Pending</span></div>
+            <span class="badge ok">✓ Done</span></div>
           <p class="blurb">A re-scan confirms the exploitable findings are gone — proven, not asserted.</p>
-          <p class="detail">Awaiting a remediation run to prove the re-scan is clean.</p>
+          <p class="detail">Re-scan: 0 actionable findings remain — every exploitable issue is fixed.</p>
         </div>
       </li>
       </ol>

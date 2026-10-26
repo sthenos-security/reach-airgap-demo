@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What REACHABLE fixed</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0B0F19;color:#f8fafc;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:32px 20px 64px}
+h1{font-size:clamp(30px,4vw,48px);margin:10px 0}
+h2{font-size:20px;margin:34px 0 12px}
+a{color:#60a5fa}
+.eyebrow{color:#38bdf8;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+.muted{color:#94a3b8}
+.warn{color:#fca5a5}
+.cards{display:flex;gap:14px;flex-wrap:wrap;margin:22px 0}
+.card{flex:1 1 150px;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:16px;background:rgba(255,255,255,.02)}
+.card .n{font-size:34px;font-weight:700}
+.card .l{color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+.card.ok .n{color:#4ade80} .card.warnc .n{color:#fbbf24}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.07);vertical-align:top}
+th{color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.mono{font-family:Monaco,"Courier New",monospace;font-size:12px;color:#cbd5e1}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}
+.p-fixed_verified{background:rgba(74,222,128,.15);color:#4ade80}
+.p-still_present{background:rgba(251,191,36,.15);color:#fbbf24}
+.p-introduced{background:rgba(248,113,113,.15);color:#f87171}
+.p-fixed_unattributed,.p-fixed_file_broken,.p-unknown{background:rgba(148,163,184,.15);color:#cbd5e1}
+.s-CRITICAL{color:#f87171;font-weight:700} .s-HIGH{color:#fb923c;font-weight:700}
+.s-MEDIUM{color:#fbbf24} .s-LOW,.s-INFO{color:#94a3b8}
+.ba{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin:24px 0 10px}
+.ba-side{flex:1 1 165px;border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:18px;background:rgba(255,255,255,.02)}
+.ba-label{color:#94a3b8;font-size:11px;font-weight:800;letter-spacing:.16em}
+.ba-n{font-size:52px;font-weight:800;line-height:1.15}
+.ba-n.bad{color:#f87171} .ba-n.good{color:#4ade80}
+.ba-sub{color:#94a3b8;font-size:12px}
+.ba-arrow{color:#60a5fa;font-size:32px;font-weight:700}
+.story{color:#cbd5e1;font-size:15px;line-height:1.75;padding-left:22px;margin:18px 0}
+.story strong{color:#f8fafc}
+.diff .add{color:#4ade80}
+.diff .del{color:#f87171}
+.diff .meta{color:#60a5fa}
+.dochunk{color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:14px 0 4px}
+.diff{background:#070A12;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:16px;
+ overflow-x:auto;font-family:Monaco,"Courier New",monospace;font-size:12px;line-height:1.5;white-space:pre}
+</style></head><body><main>
+    <p class="eyebrow">Opencode agent &mdash; after remediation</p>
+    <h1>Opencode agent remediation result</h1>
+
+    <ol class="story">
+      <li><strong>Generated.</strong> This application was written by a coding agent in an earlier run and frozen as a <strong>captured specimen</strong> so the demo is repeatable. Nothing was generated in this run &mdash; only the remediation below.</li>
+      <li><strong>Insecure.</strong> REACHABLE found the remediation list &mdash;
+          all findings that are not proven noise. <a href="./before.html">See the scan</a>.</li>
+      <li><strong>Remediated.</strong> REACHABLE handed that remediation list to the
+          same agent. <strong>The remediation audit has 0 open remediation-scope finding(s); 1 resolved.</strong></li>
+    </ol>
+    
+    
+    <h2>Scanner provenance</h2><p class='muted'>REACHABLE wheel/build and scan timestamps, read from the scanner database rows that produced the page.</p><table><thead><tr><th>Scan</th><th>REACHABLE version</th><th>Timestamp (UTC)</th><th>Commit</th><th>Status</th></tr></thead><tbody><tr><td>Baseline</td><td class='mono'>1.0.0b240</td><td class='mono'>2026-10-26 13:16:11</td><td class='mono'>not recorded</td><td>complete</td></tr><tr><td>Baseline</td><td class='mono'>1.0.0b240</td><td class='mono'>2026-10-26 13:23:42</td><td class='mono'>6d6a3ce6</td><td>complete</td></tr></tbody></table>
+    
+    <p class="muted">Run 2026-10-26 13:17:41 UTC &middot; status partial after 1 agent fix attempt(s)</p>
+
+    <div class="ba">
+      <div class="ba-side">
+        <div class="ba-label">INITIAL SCOPE</div>
+        <div class="ba-n bad">1</div>
+        <div class="ba-sub">remediation list rows</div>
+      </div>
+      <div class="ba-arrow">&rarr;</div>
+      <div class="ba-side">
+        <div class="ba-label">CURRENT OPEN</div>
+        <div class="ba-n good">0</div>
+        <div class="ba-sub">still present in remediation audit</div>
+      </div>
+      <div class="ba-side">
+        <div class="ba-label">RESOLVED</div>
+        <div class="ba-n good">1</div>
+        <div class="ba-sub">confirmed by remediation audit</div>
+      </div>
+    </div>
+    <p class="muted">Run status: <strong>partial</strong> after
+       1 iteration(s).</p>
+    <p class="muted">Initial remediation scope: <strong>1</strong>. Resolved: <strong>1</strong>. Current open: <strong>0</strong>. Noise listed separately: <strong>2</strong>. Resolved and open are counted from the remediation audit, not inferred from scan delta. Final scan open evidence: 0.</p>
+    <p class="muted">Open rows are findings still present after the final recorded agent fix attempt. That can mean the iteration budget ended, the agent did not make the right change, or the finding needs a non-source/package/build change that the agent could not safely complete in this lane. Those rows stay visible instead of being counted as fixed.</p>
+    
+
+    <h2>Remediation scope &mdash; 1 finding(s)</h2>
+    <p class="muted">Rows REACHABLE handed to the agent in this source-remediation pass.</p>
+    <table><thead><tr><th>Order</th><th>Outcome</th><th>Severity</th><th>Type</th><th>Finding</th><th>File</th></tr></thead>
+    <tbody><tr class='o-fixed_unattributed'><td class='mono'>1</td><td><span class='pill p-fixed_unattributed' title='Absent from the rescan, but in a file the agent never touched — reported as scanner variance, not as a fix.'>Gone, not attributed</span></td><td class='sev s-MEDIUM'>MEDIUM</td><td>CWE</td><td>File read on a path built from external input without resolving symlinks and validating the result stays inside the expected directory — CWE-59 symlink following. An attacker who controls the director</td><td class='mono'>/app/app/docs-worker/app.py</td></tr></tbody></table>
+    <p class='muted'>This is the remediation list REACHABLE handed to the agent, collapsed to each finding's final recorded outcome. The noise list below is excluded only when REACHABLE has explicit non-production or unreachable evidence.</p>
+
+    <h2>The code the agent wrote</h2>
+    <p class="muted">The staged patch, exactly as committed.</p>
+    <pre class='diff'><span class='meta'>diff --git a/app.py b/app.py</span>
+<span class=''>index 4267098..d45f5e0 100644</span>
+<span class=''>--- a/app.py</span>
+<span class=''>+++ b/app.py</span>
+<span class='meta'>@@ -32,17 +32,53 @@ ROLE_RANK = {</span>
+<span class=''> }</span>
+<span class=''> </span>
+<span class=''> </span>
+<span class='add'>+class UnsafePathError(RuntimeError):</span>
+<span class='add'>+    &quot;&quot;&quot;A configured path escapes its trusted root once symlinks are resolved.&quot;&quot;&quot;</span>
+<span class='add'>+</span>
+<span class='add'>+</span>
+<span class='add'>+def _is_within(root: Path, resolved: Path) -&gt; bool:</span>
+<span class='add'>+    return resolved == root or root in resolved.parents</span>
+<span class='add'>+</span>
+<span class='add'>+</span>
+<span class='add'>+def resolve_within(root: Path, candidate: Path, label: str) -&gt; Path:</span>
+<span class='add'>+    &quot;&quot;&quot;Resolve ``candidate`` through any symlinks and require it to stay under ``root``.</span>
+<span class='add'>+</span>
+<span class='add'>+    Without this, a path assembled from external input (an environment override, or</span>
+<span class='add'>+    simply the contents of a checked-out working tree) can be a symlink pointing at</span>
+<span class='add'>+    an unrelated host file such as ``~/.ssh/id_rsa``; opening or reading it would</span>
+<span class='add'>+    follow the link off the trusted root. CWE-59.</span>
+<span class='add'>+    &quot;&quot;&quot;</span>
+<span class='add'>+    resolved_root = Path(root).resolve()</span>
+<span class='add'>+    resolved = Path(candidate).resolve()</span>
+<span class='add'>+    if not _is_within(resolved_root, resolved):</span>
+<span class='add'>+        # Keep the client/caller-visible message generic; the concrete paths stay</span>
+<span class='add'>+        # in the server-side diagnostic only.</span>
+<span class='add'>+        print(f&quot;docs-worker rejected {label}: {candidate} -&gt; {resolved} escapes {resolved_root}&quot;)</span>
+<span class='add'>+        raise UnsafePathError(f&quot;{label} resolves outside its trusted root&quot;)</span>
+<span class='add'>+    return resolved</span>
+<span class='add'>+</span>
+<span class='add'>+</span>
+<span class='add'>+def _db_trust_root() -&gt; Path:</span>
+<span class='add'>+    &quot;&quot;&quot;Repo-relative database paths are anchored to ROOT; an operator-supplied</span>
+<span class='add'>+    absolute path outside the repository is anchored to its own parent directory.&quot;&quot;&quot;</span>
+<span class='add'>+    if _is_within(ROOT, Path(os.path.abspath(DB_PATH))):</span>
+<span class='add'>+        return ROOT</span>
+<span class='add'>+    return DB_PATH.parent</span>
+<span class='add'>+</span>
+<span class='add'>+</span>
+<span class=''> def connect() -&gt; sqlite3.Connection:</span>
+<span class=''>     DB_PATH.parent.mkdir(parents=True, exist_ok=True)</span>
+<span class='del'>-    conn = sqlite3.connect(DB_PATH)</span>
+<span class='add'>+    db_path = resolve_within(_db_trust_root(), DB_PATH, &quot;database path&quot;)</span>
+<span class='add'>+    conn = sqlite3.connect(db_path)</span>
+<span class=''>     conn.row_factory = sqlite3.Row</span>
+<span class=''>     conn.execute(&quot;PRAGMA foreign_keys = ON&quot;)</span>
+<span class=''>     return conn</span>
+<span class=''> </span>
+<span class=''> </span>
+<span class=''> def init_db() -&gt; None:</span>
+<span class='add'>+    schema_path = resolve_within(ROOT, SCHEMA_PATH, &quot;schema file&quot;)</span>
+<span class=''>     with connect() as conn:</span>
+<span class='del'>-        conn.executescript(SCHEMA_PATH.read_text())</span>
+<span class='add'>+        conn.executescript(schema_path.read_text())</span>
+<span class=''>     UPLOAD_ROOT.mkdir(parents=True, exist_ok=True)</span>
+<span class=''> </span>
+<span class=''> </span></pre>
+
+    <h2>Noise &mdash; 2 finding(s)</h2><p class='muted'>All 2 are excluded for one reason: the application never reaches the vulnerable code. These are real advisories against real dependencies &mdash; not filtered out as test or scaffolding files. They are excluded from the remediation scope, and listed rather than hidden. <strong>1 of 2</strong> stopped appearing once the in-scope fixes landed, almost always because they shared a root cause with something that was in scope. REACHABLE never asked the agent to touch them and they are not counted as fixed &mdash; the point of excluding them is that they did not need fixing. The other 1 are unchanged.</p><table><thead><tr><th></th><th>What happened</th><th>Why it is excluded</th><th>Severity</th><th>Type</th><th>Finding</th><th>File</th></tr></thead><tbody><tr class='o-introduced'><td></td><td><span class='pill p-introduced' title='This finding did not exist before remediation.'>Introduced</span></td><td class='muted'>not reachable</td><td class='sev s-MEDIUM'>MEDIUM</td><td>MALWARE</td><td>[Semgrep] reachable.collectors.secrets.rules.python-malware-unsafe-deserialization: Unsafe deserialization - can execute arbitrary code</td><td class='mono'>/root/.reachable/transient/vibe/docs-worker-7de4a2d8/agent-remediation/workspace-remediation/20261026-131719/iteration-01/proof-state/scanner-v0/app.py</td></tr><tr class='o-fixed_unattributed'><td></td><td><span class='pill p-fixed_unattributed' title='Absent from the rescan, but in a file the agent never touched — reported as scanner variance, not as a fix.'>Gone, not attributed</span></td><td class='muted'>not reachable</td><td class='sev s-MEDIUM'>MEDIUM</td><td>MALWARE</td><td>[Semgrep] reachable.collectors.secrets.rules.python-malware-unsafe-deserialization: Unsafe deserialization - can execute arbitrary code</td><td class='mono'>/app/app/docs-worker/app.py</td></tr></tbody></table>
+
+    
+
+    <h2>Remediation Attempt</h2>
+    <p><strong>Started with 1 finding to fix. Iteration 1 fixed 1 issue; 0 issues left. Done.</strong></p><p class='muted'>No security findings remain. Noise and context are listed separately on this page.</p><table><tbody><tr><th>Starting findings</th><td>1</td></tr><tr><th>Iterations used</th><td>1</td></tr><tr><th>Final open findings</th><td>0</td></tr><tr><th>Noise excluded</th><td>2</td></tr><tr><th>Context only</th><td>0</td></tr><tr><th>Stop condition</th><td>Stopped because the scan was clean.</td></tr></tbody></table><h3>Pass-by-pass breakdown</h3><table><thead><tr><th>Pass</th><th>Started with</th><th>Fixed</th><th>Left</th><th>Noise excluded</th><th>Context</th><th>Time</th><th>How it ended</th></tr></thead><tbody><tr><td class='mono'>1</td><td class='mono'>1</td><td class='mono'>1</td><td class='mono'>0</td><td class='mono'>2</td><td class='mono'>0</td><td class='mono'>352.2s</td><td class='mono'>ran to completion</td></tr></tbody><tfoot><tr><th>Total</th><th class='mono'>1</th><th class='mono'>1</th><th class='mono'>0</th><th class='mono'>2</th><th class='mono'>0</th><th class='mono'>352.2s</th><th class='mono'>none killed</th></tr></tfoot></table><h3>Iteration 1: fixed 1 issue; 0 issues left</h3><ul><li>None</li></ul>
+
+    <h2>How long it took</h2>
+    <p class='muted'>No timings were recorded for this run.</p>
+
+    <p class="muted"><a href="./">← initial scan</a> ·
+       <a href="">this pipeline run</a></p>
+    </main></body></html>
