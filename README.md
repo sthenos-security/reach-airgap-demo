@@ -1,5 +1,7 @@
 # REACHABLE — Air-Gap Demo
 
+### ▶ [Open the demo status page](https://sthenos-security.github.io/reach-airgap-demo/)
+
 **What this shows:** REACHABLE found a real security bug in an application and
 an AI coding agent fixed it, **on a computer that cannot reach the internet**.
 A second scan confirmed the fix.
