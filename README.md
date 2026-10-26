@@ -39,14 +39,14 @@ shows that test.
    + daily security intelligence         agent asks for fixes
             │                                       ▲
             ▼                                       │
-┌─ CUSTOMER MIRROR ────────────────────────────────────────────────────────┐
+┌─ MIRROR ─────────────────────────────────────────────────────────────────┐
 │ The only machine that touches both the internet and the enclave.         │
 │ Its firewall blocks EVERYTHING except two destinations:                  │
 │ Sthenos (software + intelligence) and the model provider.                │
 └──────────────────────────────────────────────────────────────────────────┘
             │ software + intelligence in            ▲ fix requests out,
             ▼ (signature-checked)                   │ answers back
-┌─ ISOLATED ENCLAVE (the customer's protected network) ────────────────────┐
+┌─ ISOLATED ENCLAVE (no route to the internet) ────────────────────────────┐
 │ No route to the internet. A live test inside it fails.                   │
 │                                                                          │
 │ ┌──────────────────┐   reads packages    ┌──────────────────┐            │
@@ -76,9 +76,7 @@ Step by step:
    go online to get them.
 3. **The application's building blocks come from inside.** The application
    uses third-party packages. The enclave gets them only from a *private
-   package registry* with no internet connection. In a customer deployment
-   that is the customer's own registry; in this demo it is simulated (see
-   below).
+   package registry* with no internet connection.
 4. **REACHABLE scans the application.** It reports what is actually
    exploitable, not every theoretical issue. In this run: 2 findings, 1 of them
    exploitable.
@@ -99,33 +97,11 @@ Step by step:
 | **Signed security data and licence** | Stale or forged vulnerability data. Older data is refused, so nobody can roll it back. |
 | **Nothing secret in this repository** | Keys, passwords and network details stay on the private operator side. This repository holds only the sample application and the published pages. |
 
-## What is real, and what is simplified for the demo
-
-- **The AI model is a hosted model** (`claude-opus-5`), reached only through
-  the mirror. A customer points the same gatekeeper at its own model running
-  on its own hardware. That is a configuration change, not a new design.
-- **The private package registry is simulated.** A customer runs its own
-  internal registry. The demo simulates it: before the network is cut, it
-  downloads the sample app's dependencies from the public package sites
-  (PyPI, npm, the Go module proxy) and loads them into the registry. Inside
-  the isolated network, dependencies are looked up only there.
-- **The sample application is fixed, not generated.** The demo scans and fixes
-  a committed application rather than having an AI write one first. This saves
-  time; it is not an air-gap limitation.
-- **The published run scans one service.** The sample application has four
-  services; the current run scans and fixes the Python document service. A run
-  over the whole application is next.
-- **Sending results back to the customer's Sthenos dashboard** (out through
-  the same mirror) is designed but not yet shown in this demo.
-- **Demo keys.** This demo creates its own keys for a Sthenos-owned account. A
-  customer creates its keys in its own browser, so the private key never
-  leaves the customer.
-
 ## Words used on these pages
 
 - **Enclave** — the protected computer or network with no route to the internet.
 - **Mirror** — the single gatekeeper machine between the enclave and the outside.
-- **Private package registry** — the customer's internal store of approved software components.
+- **Private package registry** — the enclave's internal store of approved software components.
 - **Finding** — a security issue the scan reports.
 - **Exploitable / actionable** — a finding an attacker could actually reach and use, as opposed to one in code that never runs.
 - **Remediation** — fixing the code so the finding goes away.
