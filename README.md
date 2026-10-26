@@ -41,7 +41,7 @@ shows that test.
             ▼                                       │
 ┌─ MIRROR ─────────────────────────────────────────────────────────────────┐
 │ The only machine that touches both the internet and the enclave.         │
-│ Its firewall blocks EVERYTHING except two destinations:                  │
+│ Its firewall blocks everything except two services:                      │
 │ Sthenos (software + intelligence) and the model provider.                │
 └──────────────────────────────────────────────────────────────────────────┘
             │ software + intelligence in            ▲ fix requests out,
