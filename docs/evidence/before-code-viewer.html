@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Code before remediation</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #090d14;
+      --panel: #101722;
+      --line: #253244;
+      --text: #e5edf8;
+      --muted: #91a2b7;
+      --accent: #4dd0b8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 14px/1.5 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    header {
+      padding: 22px 28px;
+      border-bottom: 1px solid var(--line);
+      background: #0c121b;
+    }
+    h1 { margin: 0 0 6px; font-size: 22px; }
+    p { margin: 0; color: var(--muted); }
+    main {
+      display: grid;
+      grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+      min-height: calc(100vh - 86px);
+      align-content: start;
+    }
+    nav {
+      position: sticky;
+      top: 0;
+      align-self: start;
+      max-height: calc(100vh - 86px);
+      overflow: auto;
+      padding: 18px;
+      border-right: 1px solid var(--line);
+      background: var(--panel);
+    }
+    nav a {
+      display: block;
+      padding: 7px 8px;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 6px;
+      overflow-wrap: anywhere;
+    }
+    nav a:hover { background: #182233; color: var(--accent); }
+    .content { padding: 22px; min-width: 0; }
+    .file {
+      margin: 0 0 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #080c12;
+    }
+    h2 {
+      margin: 0;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--accent);
+      border-bottom: 1px solid var(--line);
+      background: #101824;
+      overflow-wrap: anywhere;
+    }
+    .note { padding: 10px 14px; border-bottom: 1px solid var(--line); }
+    pre {
+      margin: 0;
+      padding: 14px;
+      overflow: auto;
+      font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    }
+    @media (max-width: 800px) {
+      main { grid-template-columns: 1fr; }
+      nav { position: static; max-height: 260px; border-right: 0; border-bottom: 1px solid var(--line); }
+      header { padding: 18px 16px; }
+      .content { padding: 16px; }
+    }
+    .back{margin:0 0 12px;font-size:14px}.back a,.site-footer a{color:#60a5fa}.site-footer{margin:40px 0 0;padding:20px 16px;border-top:1px solid rgba(255,255,255,.08);color:#94a3b8;font-size:13px;text-align:center;overflow-wrap:anywhere}.site-footer p{margin:4px 0}
+  </style>
+</head>
+<body>
+  <header>
+    <p class="back"><a href="../index.html">&larr; Back to demo status</a></p>
+    <h1>Code before remediation</h1>
+    <p>2 files from the application.</p>
+  </header>
+  <main>
+    <nav><a href="#file-1">app.py</a><a href="#file-2">requirements.txt</a></nav>
+    <div class="content">
+            <section id="file-1" class="file">
+              <h2>app.py</h2>
+              
+              <pre><code>from __future__ import annotations
+
+import json
+import os
+import re
+import sqlite3
+import threading
+import time
+import uuid
+from pathlib import Path
+from typing import Callable, Iterable
+from urllib.parse import unquote
+from wsgiref.simple_server import make_server
+
+import yaml  # document frontmatter parsing (resolved from the enclave&#x27;s private PyPI)
+
+
+ROOT = Path(__file__).resolve().parents[1]
+DB_PATH = Path(os.environ.get(&quot;TREASURY_DB_PATH&quot;, ROOT / &quot;data&quot; / &quot;treasury.db&quot;))
+SCHEMA_PATH = ROOT / &quot;scripts&quot; / &quot;schema.sql&quot;
+UPLOAD_ROOT = Path(os.environ.get(&quot;TREASURY_UPLOAD_ROOT&quot;, ROOT / &quot;uploads&quot; / &quot;docs&quot;))
+PORT = int(os.environ.get(&quot;PORT&quot;, &quot;8090&quot;))
+
+StartResponse = Callable[[str, list[tuple[str, str]]], None]
+WSGIApp = Callable[[dict, StartResponse], Iterable[bytes]]
+
+ROLE_RANK = {
+    &quot;viewer&quot;: 1,
+    &quot;operator&quot;: 2,
+    &quot;treasury_manager&quot;: 3,
+    &quot;admin&quot;: 4,
+}
+
+
+def connect() -&gt; sqlite3.Connection:
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    conn.execute(&quot;PRAGMA foreign_keys = ON&quot;)
+    return conn
+
+
+def init_db() -&gt; None:
+    with connect() as conn:
+        conn.executescript(SCHEMA_PATH.read_text())
+    UPLOAD_ROOT.mkdir(parents=True, exist_ok=True)
+
+
+def lookup_user(user_id: str) -&gt; dict | None:
+    with connect() as conn:
+        row = conn.execute(
+            &quot;&quot;&quot;
+            SELECT id, organization_id, name, email, role
+              FROM users
+             WHERE id = ? AND active = 1
+            &quot;&quot;&quot;,
+            (user_id,),
+        ).fetchone()
+    return dict(row) if row else None
+
+
+class RequestContextMiddleware:
+    def __init__(self, app: WSGIApp):
+        self.app = app
+
+    def __call__(self, environ: dict, start_response: StartResponse) -&gt; Iterable[bytes]:
+        environ[&quot;treasury.request_id&quot;] = f&quot;req-{uuid.uuid4()}&quot;
+        return self.app(environ, start_response)
+
+
+class CorsMiddleware:
+    def __init__(self, app: WSGIApp):
+        self.app = app
+
+    def __call__(self, environ: dict, start_response: StartResponse) -&gt; Iterable[bytes]:
+        if environ[&quot;REQUEST_METHOD&quot;] == &quot;OPTIONS&quot;:
+            start_response(
+                &quot;204 No Content&quot;,
+                [
+                    (&quot;Access-Control-Allow-Origin&quot;, &quot;*&quot;),
+                    (&quot;Access-Control-Allow-Headers&quot;, &quot;Content-Type, X-User-Id, X-File-Name&quot;),
+                    (&quot;Access-Control-Allow-Methods&quot;, &quot;GET, POST, OPTIONS&quot;),
+                    (&quot;X-Request-Id&quot;, environ.get(&quot;treasury.request_id&quot;, &quot;&quot;)),
+                ],
+            )
+            return [b&quot;&quot;]
+        return self.app(environ, start_response)
+
+
+class AuditMiddleware:
+    def __init__(self, app: WSGIApp):
+        self.app = app
+
+    def __call__(self, environ: dict, start_response: StartResponse) -&gt; Iterable[bytes]:
+        status_holder = {&quot;code&quot;: 500}
+
+        def capture(status: str, headers: list[tuple[str, str]], exc_info=None):
+            status_holder[&quot;code&quot;] = int(status.split(&quot; &quot;, 1)[0])
+            headers = [
+                (&quot;Access-Control-Allow-Origin&quot;, &quot;*&quot;),
+                (&quot;X-Request-Id&quot;, environ.get(&quot;treasury.request_id&quot;, &quot;&quot;)),
+                *headers,
+            ]
+            return start_response(status, headers)
+
+        try:
+            return list(self.app(environ, capture))
+        finally:
+            path = environ.get(&quot;PATH_INFO&quot;, &quot;&quot;)
+            if path not in {&quot;/health&quot;, &quot;/metrics&quot;}:
+                self._write_audit(environ, status_holder[&quot;code&quot;])
+
+    def _write_audit(self, environ: dict, status_code: int) -&gt; None:
+        user = environ.get(&quot;treasury.user&quot;) or {}
+        try:
+            with connect() as conn:
+                conn.execute(
+                    &quot;&quot;&quot;
+                    INSERT INTO audit_records
+                      (id, organization_id, actor_user_id, service, action, method, path, status_code, metadata)
+                    VALUES (?, ?, ?, &#x27;docs-worker&#x27;, ?, ?, ?, ?, ?)
+                    &quot;&quot;&quot;,
+                    (
+                        f&quot;audit-{uuid.uuid4()}&quot;,
+                        user.get(&quot;organization_id&quot;),
+                        user.get(&quot;id&quot;),
+                        action_for(environ),
+                        environ.get(&quot;REQUEST_METHOD&quot;, &quot;&quot;),
+                        environ.get(&quot;PATH_INFO&quot;, &quot;&quot;),
+                        status_code,
+                        json.dumps({&quot;request_id&quot;: environ.get(&quot;treasury.request_id&quot;)}),
+                    ),
+                )
+        except Exception as exc:
+            print(f&quot;docs-worker audit failed: {exc}&quot;)
+
+
+class AuthMiddleware:
+    def __init__(self, app: WSGIApp):
+        self.app = app
+
+    def __call__(self, environ: dict, start_response: StartResponse) -&gt; Iterable[bytes]:
+        if environ.get(&quot;PATH_INFO&quot;) in {&quot;/health&quot;, &quot;/metrics&quot;}:
+            return self.app(environ, start_response)
+        user_id = environ.get(&quot;HTTP_X_USER_ID&quot;) or &quot;u-alice&quot;
+        user = lookup_user(user_id)
+        if not user:
+            return json_response(start_response, 401, {&quot;error&quot;: &quot;invalid_user&quot;})
+        environ[&quot;treasury.user&quot;] = user
+        return self.app(environ, start_response)
+
+
+class Router:
+    def __call__(self, environ: dict, start_response: StartResponse) -&gt; Iterable[bytes]:
+        method = environ[&quot;REQUEST_METHOD&quot;]
+        path = environ.get(&quot;PATH_INFO&quot;, &quot;&quot;)
+        if method == &quot;GET&quot; and path == &quot;/health&quot;:
+            return health(start_response)
+        if method == &quot;GET&quot; and path == &quot;/metrics&quot;:
+            return metrics(start_response)
+        if method == &quot;GET&quot; and path == &quot;/documents&quot;:
+            return require_role(environ, start_response, &quot;viewer&quot;, list_documents)
+        if method == &quot;POST&quot; and path == &quot;/documents&quot;:
+            return require_role(environ, start_response, &quot;operator&quot;, upload_document)
+        match = re.fullmatch(r&quot;/documents/([^/]+)/download&quot;, path)
+        if method == &quot;GET&quot; and match:
+            environ[&quot;treasury.document_id&quot;] = unquote(match.group(1))
+            return require_role(environ, start_response, &quot;viewer&quot;, download_document)
+        return json_response(start_response, 404, {&quot;error&quot;: &quot;not_found&quot;})
+
+
+def require_role(
+    environ: dict,
+    start_response: StartResponse,
+    min_role: str,
+    handler: Callable[[dict, StartResponse], Iterable[bytes]],
+) -&gt; Iterable[bytes]:
+    user = environ.get(&quot;treasury.user&quot;) or {}
+    if ROLE_RANK.get(user.get(&quot;role&quot;), 0) &lt; ROLE_RANK[min_role]:
+        return json_response(start_response, 403, {&quot;error&quot;: &quot;forbidden&quot;, &quot;required_role&quot;: min_role})
+    return handler(environ, start_response)
+
+
+def health(start_response: StartResponse) -&gt; Iterable[bytes]:
+    with connect() as conn:
+        count = conn.execute(&quot;SELECT COUNT(*) AS count FROM documents&quot;).fetchone()[&quot;count&quot;]
+    return json_response(start_response, 200, {&quot;ok&quot;: True, &quot;service&quot;: &quot;docs-worker&quot;, &quot;documents&quot;: count})
+
+
+def metrics(start_response: StartResponse) -&gt; Iterable[bytes]:
+    with connect() as conn:
+        uploaded = conn.execute(&quot;SELECT COUNT(*) AS count FROM documents WHERE status = &#x27;uploaded&#x27;&quot;).fetchone()[&quot;count&quot;]
+        indexed = conn.execute(&quot;SELECT COUNT(*) AS count FROM documents WHERE status = &#x27;indexed&#x27;&quot;).fetchone()[&quot;count&quot;]
+    body = &quot;\n&quot;.join(
+        [
+            &quot;# TYPE treasury_docs_uploaded gauge&quot;,
+            f&quot;treasury_docs_uploaded {uploaded}&quot;,
+            &quot;# TYPE treasury_docs_indexed counter&quot;,
+            f&quot;treasury_docs_indexed {indexed}&quot;,
+            &quot;&quot;,
+        ]
+    )
+    return response(start_response, 200, body.encode(), [(&quot;Content-Type&quot;, &quot;text/plain; charset=utf-8&quot;)])
+
+
+def list_documents(environ: dict, start_response: StartResponse) -&gt; Iterable[bytes]:
+    user = environ[&quot;treasury.user&quot;]
+    with connect() as conn:
+        rows = conn.execute(
+            &quot;&quot;&quot;
+            SELECT d.id, d.filename, d.content_type, d.size_bytes, d.status, d.created_at, d.indexed_at,
+                   u.name AS uploaded_by
+              FROM documents d
+              JOIN users u ON u.id = d.uploaded_by
+             WHERE d.organization_id = ?
+             ORDER BY d.created_at DESC
+            &quot;&quot;&quot;,
+            (user[&quot;organization_id&quot;],),
+        ).fetchall()
+    return json_response(start_response, 200, {&quot;documents&quot;: [dict(row) for row in rows]})
+
+
+def parse_document_frontmatter(body: bytes) -&gt; dict:
+    &quot;&quot;&quot;Extract a leading `---`-delimited YAML frontmatter block from an upload.
+
+    Treasury documents may carry a metadata header (tags, classification,
+    retention). The block is read straight off the uploaded bytes.
+    &quot;&quot;&quot;
+    text = body[:4096].decode(&quot;utf-8&quot;, &quot;ignore&quot;)
+    if not text.startswith(&quot;---\n&quot;):
+        return {}
+    end = text.find(&quot;\n---&quot;, 4)
+    if end == -1:
+        return {}
+    block = text[4:end]
+    meta = yaml.load(block, Loader=yaml.Loader)  # parse the document&#x27;s metadata header
+    return meta if isinstance(meta, dict) else {}
+
+
+def upload_document(environ: dict, start_response: StartResponse) -&gt; Iterable[bytes]:
+    user = environ[&quot;treasury.user&quot;]
+    filename = safe_filename(environ.get(&quot;HTTP_X_FILE_NAME&quot;) or &quot;treasury-document.bin&quot;)
+    content_type = environ.get(&quot;CONTENT_TYPE&quot;) or &quot;application/octet-stream&quot;
+    length = int(environ.get(&quot;CONTENT_LENGTH&quot;) or &quot;0&quot;)
+    if length &lt;= 0:
+        return json_response(start_response, 400, {&quot;error&quot;: &quot;empty_upload&quot;})
+    body = environ[&quot;wsgi.input&quot;].read(length)
+    metadata = parse_document_frontmatter(body)
+    document_id = f&quot;doc-{uuid.uuid4()}&quot;
+    org_dir = UPLOAD_ROOT / user[&quot;organization_id&quot;]
+    org_dir.mkdir(parents=True, exist_ok=True)
+    storage_path = org_dir / f&quot;{document_id}-{filename}&quot;
+    storage_path.write_bytes(body)
+    with connect() as conn:
+        conn.execute(
+            &quot;&quot;&quot;
+            INSERT INTO documents
+              (id, organization_id, uploaded_by, filename, content_type, storage_path, size_bytes, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, &#x27;uploaded&#x27;)
+            &quot;&quot;&quot;,
+            (
+                document_id,
+                user[&quot;organization_id&quot;],
+                user[&quot;id&quot;],
+                filename,
+                content_type,
+                str(storage_path),
+                len(body),
+            ),
+        )
+    return json_response(
+        start_response,
+        201,
+        {&quot;id&quot;: document_id, &quot;filename&quot;: filename, &quot;size_bytes&quot;: len(body),
+         &quot;status&quot;: &quot;uploaded&quot;, &quot;metadata&quot;: metadata},
+    )
+
+
+def download_document(environ: dict, start_response: StartResponse) -&gt; Iterable[bytes]:
+    user = environ[&quot;treasury.user&quot;]
+    document_id = environ[&quot;treasury.document_id&quot;]
+    with connect() as conn:
+        row = conn.execute(
+            &quot;&quot;&quot;
+            SELECT filename, content_type, storage_path
+              FROM documents
+             WHERE id = ? AND organization_id = ?
+            &quot;&quot;&quot;,
+            (document_id, user[&quot;organization_id&quot;]),
+        ).fetchone()
+    if not row:
+        return json_response(start_response, 404, {&quot;error&quot;: &quot;document_not_found&quot;})
+    storage_path = Path(row[&quot;storage_path&quot;])
+    if not storage_path.exists():
+        return json_response(start_response, 410, {&quot;error&quot;: &quot;document_missing_from_storage&quot;})
+    headers = [
+        (&quot;Content-Type&quot;, row[&quot;content_type&quot;]),
+        (&quot;Content-Disposition&quot;, f&#x27;attachment; filename=&quot;{row[&quot;filename&quot;]}&quot;&#x27;),
+    ]
+    return response(start_response, 200, storage_path.read_bytes(), headers)
+
+
+def index_worker(stop_event: threading.Event) -&gt; None:
+    while not stop_event.wait(4):
+        try:
+            with connect() as conn:
+                row = conn.execute(
+                    &quot;&quot;&quot;
+                    SELECT id
+                      FROM documents
+                     WHERE status = &#x27;uploaded&#x27;
+                     ORDER BY created_at
+                     LIMIT 1
+                    &quot;&quot;&quot;
+                ).fetchone()
+                if not row:
+                    continue
+                conn.execute(
+                    &quot;UPDATE documents SET status = &#x27;indexed&#x27;, indexed_at = CURRENT_TIMESTAMP WHERE id = ?&quot;,
+                    (row[&quot;id&quot;],),
+                )
+                conn.execute(
+                    &quot;&quot;&quot;
+                    INSERT INTO audit_records
+                      (id, organization_id, actor_user_id, service, action, method, path, status_code, metadata)
+                    SELECT ?, organization_id, NULL, &#x27;docs-worker&#x27;, &#x27;document.indexed&#x27;, &#x27;WORKER&#x27;, ?, 200, ?
+                      FROM documents
+                     WHERE id = ?
+                    &quot;&quot;&quot;,
+                    (
+                        f&quot;audit-{uuid.uuid4()}&quot;,
+                        f&quot;/documents/{row[&#x27;id&#x27;]}&quot;,
+                        json.dumps({&quot;document_id&quot;: row[&quot;id&quot;]}),
+                        row[&quot;id&quot;],
+                    ),
+                )
+        except Exception as exc:
+            print(f&quot;docs-worker indexer failed: {exc}&quot;)
+
+
+def action_for(environ: dict) -&gt; str:
+    method = environ.get(&quot;REQUEST_METHOD&quot;, &quot;&quot;)
+    path = environ.get(&quot;PATH_INFO&quot;, &quot;&quot;)
+    if method == &quot;POST&quot; and path == &quot;/documents&quot;:
+        return &quot;document.upload&quot;
+    if method == &quot;GET&quot; and path.endswith(&quot;/download&quot;):
+        return &quot;document.download&quot;
+    if method == &quot;GET&quot; and path == &quot;/documents&quot;:
+        return &quot;document.list&quot;
+    return &quot;request&quot;
+
+
+def safe_filename(value: str) -&gt; str:
+    base = Path(value).name
+    return re.sub(r&quot;[^A-Za-z0-9._-]&quot;, &quot;_&quot;, base)[:120] or &quot;treasury-document.bin&quot;
+
+
+def json_response(start_response: StartResponse, status: int, payload: dict) -&gt; Iterable[bytes]:
+    return response(
+        start_response,
+        status,
+        json.dumps(payload).encode(),
+        [(&quot;Content-Type&quot;, &quot;application/json&quot;)],
+    )
+
+
+def response(start_response: StartResponse, status: int, body: bytes, headers: list[tuple[str, str]]) -&gt; Iterable[bytes]:
+    status_text = {
+        200: &quot;OK&quot;,
+        201: &quot;Created&quot;,
+        204: &quot;No Content&quot;,
+        400: &quot;Bad Request&quot;,
+        401: &quot;Unauthorized&quot;,
+        403: &quot;Forbidden&quot;,
+        404: &quot;Not Found&quot;,
+        410: &quot;Gone&quot;,
+        500: &quot;Internal Server Error&quot;,
+    }.get(status, &quot;OK&quot;)
+    start_response(f&quot;{status} {status_text}&quot;, [(&quot;Content-Length&quot;, str(len(body))), *headers])
+    return [body]
+
+
+def build_app() -&gt; WSGIApp:
+    return RequestContextMiddleware(CorsMiddleware(AuditMiddleware(AuthMiddleware(Router()))))
+
+
+if __name__ == &quot;__main__&quot;:
+    init_db()
+    stop = threading.Event()
+    thread = threading.Thread(target=index_worker, args=(stop,), daemon=True)
+    thread.start()
+    try:
+        with make_server(&quot;&quot;, PORT, build_app()) as server:
+            print(f&quot;docs worker listening on http://localhost:{PORT}&quot;)
+            server.serve_forever()
+    finally:
+        stop.set()
+
+</code></pre>
+            </section>
+            
+            <section id="file-2" class="file">
+              <h2>requirements.txt</h2>
+              
+              <pre><code># docs-worker dependencies — resolved into the enclave&#x27;s private PyPI registry
+# (demo §5b). PyYAML parses document frontmatter on upload.
+PyYAML==6.0.1
+</code></pre>
+            </section>
+            </div>
+  </main>
+  <footer class="site-footer"><p>Learn more: <a href="https://sthenosec.com/airgap">https://sthenosec.com/airgap</a> &middot; Talk to us: <a href="mailto:sales@sthenosec.com">sales@sthenosec.com</a></p><p>&copy; 2026 Sthenos Security.</p></footer>
+</body>
+</html>

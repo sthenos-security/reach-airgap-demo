@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Air-Gap Demo — Status</title>
-<meta name="description" content="Sthenos Reachable proves offline security scanning and AI remediation inside an air-gapped enclave.">
+<meta name="description" content="REACHABLE finds and fixes a security bug on a network with no internet access.">
 <style>
   :root {
     --bg:#f6f7f9; --card:#fff; --ink:#15181d; --muted:#5b6472; --line:#e4e7ec;
@@ -32,7 +32,17 @@
   .wrap { max-width:860px; margin:0 auto; padding:40px 16px 64px; }
   header .eyebrow { color:var(--accent); font-weight:600; letter-spacing:.04em; text-transform:uppercase; font-size:13px; }
   h1 { font-size:30px; line-height:1.2; margin:.3em 0 .2em; letter-spacing:-.01em; }
-  .lede { color:var(--muted); font-size:17px; margin:.2em 0 1.4em; }
+  .lede { color:var(--muted); font-size:17px; margin:.2em 0 1.2em; }
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin:0 0 1.1em; }
+  .kpi { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; display:flex; flex-direction:column; gap:2px; }
+  .kpi .kn { font-size:34px; font-weight:700; color:var(--ok); line-height:1.1; }
+  .kpi .kl { font-weight:600; }
+  .kpi .ks { color:var(--muted); font-size:13px; }
+  .ctas { display:flex; flex-wrap:wrap; gap:10px; margin:0 0 1.4em; }
+  .cta { display:inline-block; padding:9px 16px; border-radius:999px; border:1px solid var(--line); color:var(--ink); text-decoration:none; font-weight:600; font-size:14px; }
+  .cta.primary { background:var(--ok); border-color:var(--ok); color:#fff; }
+  footer p { margin:.4em 0; }
+  footer .copy { margin-top:1em; }
   .summary { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center;
     background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 18px; margin-bottom:26px; }
   .summary .big { font-weight:700; font-size:15px; display:inline-flex; align-items:center; gap:8px; }
@@ -104,6 +114,7 @@
   .rstat .rn.ok { color:var(--ok); } .rstat .rn.warn { color:var(--warn); }
   .rstat .rl { font-size:12.5px; color:var(--muted); margin-top:5px; text-align:center; }
   .rarrow { color:var(--muted); font-size:22px; }
+  @media (max-width: 480px) { .rarrow { display:none; } }
   .regtable { width:100%; border-collapse:collapse; font-size:14px; }
   .regtable th { text-align:left; color:var(--muted); font-size:12.5px; text-transform:uppercase; letter-spacing:.03em; padding:4px 8px; border-bottom:1px solid var(--line); }
   .regtable td { padding:7px 8px; border-bottom:1px solid var(--line); }
@@ -115,62 +126,90 @@
   .prooflinks .psub { margin:0; }
   .regtable td.eco { font-weight:700; }
   .regtable code { background:var(--pending-bg); padding:1px 7px; border-radius:6px; font-size:12.5px; }
+  .passport { list-style:none; margin:.4rem 0 0; padding:0; display:grid; gap:.25rem; }
+  .chk { display:grid; grid-template-columns:1.2rem 15rem 1fr; gap:.4rem; font-size:.86rem; align-items:baseline; }
+  .chk .mark { font-weight:700; } .chk.ok .mark { color:#1b8a4b; } .chk.fail .mark { color:#c0392b; } .chk.pending .mark { color:var(--muted); }
+  .chk .clabel { color:var(--ink); font-weight:600; } .chk .cval { color:var(--muted); }
+  .assume { margin:.6rem 0 1rem; padding:.6rem .9rem; border:1px solid var(--line); border-radius:10px; background:var(--card); font-size:.9rem; }
+  .assume summary { cursor:pointer; font-weight:600; } .assume p { margin:.5rem 0; color:var(--muted); }
+  @media (max-width:640px) { .chk { grid-template-columns:1.2rem 1fr; } .chk .cval { grid-column:2; } }
 </style>
 </head>
 <body>
   <div class="wrap">
     <header>
       <div class="eyebrow">Sthenos Security · Reachable</div>
-      <h1>Security scanning &amp; AI remediation, fully air-gapped</h1>
-      <p class="lede">A live proof: from a signed bundle, with no route to the internet,
-        REACHABLE sets up the customer mirror, installs offline, scans a test repository,
-        and remediates it — and the re-scan proves the fixes.</p>
+      <h1>Found and fixed a real security bug, with the internet switched off.</h1>
+      <p class="lede">REACHABLE installed from signed software, scanned an application inside an
+        <b>enclave</b> — a network with no route to the internet — and an AI agent fixed the
+        exploitable bug. A second scan proves it. Every number below comes from that run.</p>
+      <div class="kpis"><div class="kpi"><span class="kn">0</span><span class="kl">connections to the internet</span><span class="ks">A live test inside the network fails: there is no way out.</span></div><div class="kpi"><span class="kn">1 of 1</span><span class="kl">exploitable bugs fixed</span><span class="ks">Fixed by an AI coding agent, then proven by a second scan.</span></div><div class="kpi"><span class="kn">2</span><span class="kl">signatures verified on the software</span><span class="ks">Classic + quantum-resistant, checked before anything installs.</span></div></div>
+      <div class="ctas"><a class="cta primary" href="evidence/fixed.html">See what was fixed</a><a class="cta primary" href="evidence/code-diff-viewer.html">See the code change</a><a class="cta" href="https://sthenosec.com/airgap">About REACHABLE Air-Gap</a></div>
     </header>
 
-    <div class="secure"><span class="shield">◆</span><div><strong>Air-gap deployed and secure</strong><span>Enclave verified offline · bundle signature verified · encrypted delivery</span></div></div>
+    <div class="secure"><span class="shield">◆</span><div><strong>Air-gap deployed and secure</strong><span>No internet access · signed software checked · delivered encrypted</span></div></div>
 
     <div class="summary">
-      <span class="big"><span class="pill pending">• Pending</span></span>
-      <span class="meta">Run <code>40327200456</code></span>
-      <span class="meta">Model lane: <code>hosted model claude-opus-5 via the mirror relay (api.anthropic.com)</code></span>
-      <span class="meta">Egress: 0 outbound connection attempts</span>
-      <span class="meta">Generated 2026-10-26 13:23 UTC</span>
+      <span class="big"><span class="pill ok">✓ Done</span></span>
+      <span class="meta">AI model: <code>claude-opus-5 (api.anthropic.com), reached only through the gatekeeper</code></span>
+      <span class="meta">Connections out: none</span>
+      <span class="meta">Generated 2026-10-27 19:47 UTC</span>
     </div>
 
     <div class="tabs" role="tablist">
-      <button class="tab active" data-tab="airgap" role="tab">Enclave Status</button>
-      <button class="tab" data-tab="remediation" role="tab">Remediation Status</button>
+      <button class="tab active" data-tab="airgap" role="tab">Enclave status</button>
+      <button class="tab" data-tab="remediation" role="tab">The fix</button>
     </div>
 
     <section id="tab-airgap" class="tabpanel active">
+    <div class="disclose">
+      <span class="dicon">ⓘ</span>
+      <div><strong>Every item below is a verified credential</strong>
+        <span>— a digital signature, a registered key or a passed network test, recorded by REACHABLE during the run.
+        The enclave relies on services meeting defense-grade specifications: CNSA 2.0-aligned, post-quantum signed software,
+        a mutually authenticated channel to Sthenos, allowlisted egress with no route out of the enclave, data encrypted at rest.</span></div>
+    </div>
+    <details class="assume">
+      <summary>What this demo assumes</summary>
+      <p><strong>Agent and model:</strong> the coding agent and its model are the customer's own — REACHABLE drives whatever agent
+      the enclave already has. Here: opencode, pre-installed, and a hosted model reached only through the gatekeeper. A future
+      product phase could bundle a coding agent + REACHABLE + a local LLM as one turnkey installation; that is not what is demonstrated today.</p>
+      <p><strong>Keys:</strong> this demo self-generates its mirror and enclave-host keys for the Sthenos-owned demo account
+      (a CI preflight-auth step, regenerated on demand; held as stored secrets standing in for a secret manager). A real customer
+      generates theirs through the dashboard — in the browser, so the private key never leaves them, or as short-lived temporary
+      test credentials — needing only a single firewall hole to sthenosec.com, never internet access.</p>
+      <p><strong>Trust &amp; cryptography:</strong> software is admitted into the enclave only from a CNSA-aligned, post-quantum
+      signed attestation; the connection to Sthenos is a mutually authenticated channel; data is encrypted at rest. The
+      highest-assurance trust anchor sits exactly where it matters — on the code entering the air-gapped boundary.</p>
+      <p><strong>Stand-ins:</strong> the package registries are loaded with the application's packages and the fixed versions;
+      the model is remote for the purpose of this test.</p>
+    </details>
 
     <div class="netproof">
       <div class="nphead"><span class="npdot ok"></span>
-        <strong>Internet is DOWN — the environment is isolated</strong></div>
+        <strong>No internet: the enclave is cut off</strong></div>
       <div class="nprow">
-        A live network test runs inside the environment:
-        <code>curl https://www.yahoo.com</code>
+        Inside the enclave, the demo tries to open a public website (https://www.yahoo.com).
         <span class="badge ok">✓ could not reach the internet</span>
       </div>
-      <div class="nprow"><span class="npd">URLError: &lt;urlopen error [Errno -3] Temporary failure in name resolution&gt; (no route out)</span></div>
-      <p class="npnote">The test tries to reach a public website and fails because there is no route out —
-        the scan and remediation that follow run with the internet genuinely unreachable.</p>
+      <p class="npnote">It fails because there is no route out. The scan and the fix below ran with the
+        internet unreachable.</p>
+      <details><summary>Show the exact error</summary><p class="npd">URLError: &lt;urlopen error [Errno -3] Temporary failure in name resolution&gt; (no route out)</p></details>
     </div>
 
     <section class="panel">
-      <h2>Network policy — enforced, not promised</h2>
-      <p class="psub">The environment's only connected component runs a kernel firewall whose default
-        action is <b>drop</b>: anything not listed below cannot leave, and the enclave itself has
-        no route out at all. <b>6</b> destinations
-        are permitted.</p>
-      <ol class="cmds"><li><code>ct state established,related accept</code></li><li><code>oifname &quot;lo&quot; accept</code></li><li><code>ip daddr 104.16.0.0/12 tcp dport 443 accept</code></li><li><code>udp dport 53 accept</code></li><li><code>tcp dport 53 accept</code></li><li><code>ip daddr 160.79.104.10 tcp dport 443 accept</code></li></ol>
-      <details><summary>Show the full ruleset as the kernel holds it</summary>
+      <h2>Firewall rules on the gatekeeper</h2>
+      <p class="psub">The gatekeeper's firewall blocks everything by default (<b>drop</b>). It can
+        reach only Sthenos and the AI model service; the enclave itself has no way out at all.
+        The exact rules:</p>
+      <ol class="cmds"><li>Replies to connections that are already allowed</li><li>The gatekeeper talking to itself</li><li>Sthenos — signed software and security updates (encrypted)</li><li>Name lookups (DNS) through Docker&#x27;s own resolver (UDP)</li><li>Name lookups (DNS) through Docker&#x27;s own resolver (TCP)</li><li>The AI model provider at 160.79.104.10 (encrypted)</li></ol>
+      <details><summary>Show the exact firewall rules</summary>
       <pre class="ruleset">table inet egress {
 	chain out {
 		type filter hook output priority filter; policy drop;
 		ct state established,related accept
 		oifname &quot;lo&quot; accept
-		ip daddr 104.16.0.0/12 tcp dport 443 accept
+		ip daddr { 104.16.0.0/12, 172.64.0.0/13 } tcp dport 443 accept
 		udp dport 53 accept
 		tcp dport 53 accept
 		ip daddr 160.79.104.10 tcp dport 443 accept
@@ -179,87 +218,138 @@
 </pre></details>
     </section>
 
+    <section class="panel">
+      <h2>Private package registry</h2>
+      <p class="psub">Inside the enclave, the application's dependencies come only from this
+        registry — never from the public internet, which is unreachable (see above).</p>
+      <table class="regtable"><thead><tr><th>Ecosystem</th><th>Private registry endpoint</th><th>Serving</th></tr></thead>
+      <tbody><tr><td class="eco">PYPI</td><td><code>http://registry-pypi:8080/simple/</code></td><td>1 package</td></tr><tr><td class="eco">NPM</td><td><code>http://registry-npm:4873/</code></td><td>155 packages</td></tr><tr><td class="eco">GO</td><td><code>http://registry:8080/go</code></td><td>28 packages</td></tr></tbody></table>
+    </section>
 
     <section class="panel">
-      <h2>What was installed &amp; verified — offline</h2>
-      <p class="psub">The application's packages
-        crossed the gap as a signed bundle, had their <b>signatures verified</b> and arrived over
-        <b>encrypted</b> delivery, and installed inside the enclave with <b>no internet access</b>.</p>
-      <div class="chips"><span class="chip">reachable</span><span class="chip">semgrep</span><span class="chip">guarddog</span><span class="chip">grype</span><span class="chip">gitleaks</span></div>
-      
+      <h2>Installed in the enclave</h2>
+      <p class="psub">REACHABLE installed from one signed bundle. <b>Signatures checked.</b> <b>No internet.</b></p>
+      <table class="regtable"><thead><tr><th>Component</th><th>Status</th><th>Version</th></tr></thead><tbody><tr><td>REACHABLE</td><td><span class="badge ok">✓ installed</span></td><td><code>REACHABLE 1.0.0b247</code></td></tr><tr><td>AI coding agent (opencode)</td><td><span class="badge ok">✓ installed</span></td><td><code>1.19.4</code></td></tr><tr><td>Gatekeeper (mirror)</td><td><span class="badge ok">✓ installed</span></td><td><code>running</code></td></tr><tr><td>Private npm registry (Verdaccio)</td><td><span class="badge ok">✓ installed</span></td><td><code>up, serving the enclave</code></td></tr><tr><td>Private PyPI registry (pypiserver)</td><td><span class="badge ok">✓ installed</span></td><td><code>up, serving the enclave</code></td></tr><tr><td>Private Go and Maven registry</td><td><span class="badge ok">✓ installed</span></td><td><code>up, serving the enclave</code></td></tr></tbody></table>
     </section>
       <ol class="stages">
-      <li class="stage pending">
+      <li class="stage ok">
         <div class="num">1</div>
         <div class="body">
-          <div class="head"><span class="title">Customer mirror set up</span>
-            <span class="badge pending">• Pending</span></div>
-          <p class="blurb">The customer-operated package + intel mirror is stood up on the enclave&#x27;s one internal lane.</p>
-          <p class="detail">No control evidence yet.</p>
+          <div class="head"><span class="title">Gatekeeper (mirror) up and secured</span>
+            <span class="badge ok">✓ Done</span></div>
+          <p class="blurb">The customer&#x27;s gatekeeper machine is the only link between the enclave and the outside; its firewall allows exactly the Sthenos edge and the model endpoint.</p>
+          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">Mirror running</span><span class="cval">yes</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Mirror key</span><span class="cval">Ed25519, registered with Sthenos; an under-scoped key is refused (NC-3 pass)</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Egress firewall</span><span class="cval">default drop, 6 allow rules: Sthenos edge + model endpoint only (NC-6 pass)</span></li></ul>
         </div>
       </li>
       <li class="stage ok">
         <div class="num">2</div>
         <div class="body">
-          <div class="head"><span class="title">Signed bundle installed — offline</span>
+          <div class="head"><span class="title">Private package registries up and sealed</span>
             <span class="badge ok">✓ Done</span></div>
-          <p class="blurb">The signed wheels and air-gap bundle install inside the enclave with no route to the internet, re-verified before anything runs.</p>
-          <p class="detail">Installed from the signed bundle inside the enclave (offline).</p>
+          <p class="blurb">npm, PyPI and Go packages come only from the customer&#x27;s own registries, never from the internet.</p>
+          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">Registries serving the enclave</span><span class="cval">npm registry (Verdaccio), PyPI registry (pypiserver), Go and Maven registry</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">No fetch from the internet</span><span class="cval">an unknown package is refused, a known one served (NC-2 pass)</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Packages loaded</span><span class="cval">pypi 1, npm 155, go 28</span></li></ul>
         </div>
       </li>
       <li class="stage ok">
         <div class="num">3</div>
         <div class="body">
-          <div class="head"><span class="title">REACHABLE scanned the test repository</span>
+          <div class="head"><span class="title">Enclave sealed</span>
             <span class="badge ok">✓ Done</span></div>
-          <p class="blurb">The scanner runs offline against the test application and reports findings by real exploitability (reachability).</p>
-          <p class="detail">2 findings; 1 actionable (exploitable).</p>
+          <p class="blurb">The enclave has one internal network, no route out, and no DNS to the internet.</p>
+          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">One network, no default route</span><span class="cval">NC-1a pass</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">No TCP to the internet</span><span class="cval">raw IP connect refused (NC-1b pass)</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">No DNS to the internet</span><span class="cval">public names do not resolve (NC-1c pass)</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Live test from inside</span><span class="cval">https://www.yahoo.com: unreachable; 0 outbound attempts</span></li></ul>
+        </div>
+      </li>
+      <li class="stage ok">
+        <div class="num">4</div>
+        <div class="body">
+          <div class="head"><span class="title">REACHABLE air-gap bundle deployed</span>
+            <span class="badge ok">✓ Done</span></div>
+          <p class="blurb">The signed software bundle was verified against the pinned root before installing; the licence and the security data rode the mirror.</p>
+          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">Bundle signature</span><span class="cval">CI-signed (ECDSA P-384 + ML-DSA-87, CNSA 2.0-aligned), verified against the pinned root; fingerprint 0f793b8e7ccf…</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">REACHABLE installed offline</span><span class="cval">REACHABLE 1.0.0b247</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Licence token</span><span class="cval">air-gap plan, signed JWT delivered by the mirror pull and imported in the enclave</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Security data</span><span class="cval">signed snapshot osv-2026-10-27-7</span></li></ul>
+        </div>
+      </li>
+      <li class="stage ok">
+        <div class="num">5</div>
+        <div class="body">
+          <div class="head"><span class="title">AI model reachable</span>
+            <span class="badge ok">✓ Done</span></div>
+          <p class="blurb">The coding agent&#x27;s model, reached only through the gatekeeper (remote for this demo; private in a customer deployment).</p>
+          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">Model</span><span class="cval">claude-opus-5 (api.anthropic.com), reached only through the gatekeeper</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Coding agent</span><span class="cval">opencode 1.19.4</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Path</span><span class="cval">enclave → gatekeeper relay → model; the enclave opens no connection itself</span></li></ul>
+        </div>
+      </li>
+      <li class="stage ok">
+        <div class="num">6</div>
+        <div class="body">
+          <div class="head"><span class="title">Application code staged in the enclave</span>
+            <span class="badge ok">✓ Done</span></div>
+          <p class="blurb">The application to scan and fix is mounted inside the enclave.</p>
+          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">Application mounted</span><span class="cval">the public sample application, pinned commit, read-write for the fix</span></li></ul>
+        </div>
+      </li>
+      <li class="stage ok">
+        <div class="num">7</div>
+        <div class="body">
+          <div class="head"><span class="title">Publish channel to Sthenos up</span>
+            <span class="badge ok">✓ Done</span></div>
+          <p class="blurb">The mirror proxy that carries results out, signed by the enclave key, to the customer&#x27;s Sthenos account.</p>
+          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">Mirror proxy</span><span class="cval">listening on the internal network (mirror:8444)</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Enclave key</span><span class="cval">Ed25519, registered with the account; id 1FG_lii546dL…</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Mirror → Sthenos</span><span class="cval">mutually authenticated, mirror-key JWS per request</span></li></ul>
         </div>
       </li>
       </ol>
     </section>
 
     <section id="tab-remediation" class="tabpanel">
-
       <div class="panel">
-        <h2>Remediation — before, fix, and re-scan</h2>
+        <h2>The fix: before and after</h2>
         
     <div class="rsum">
-      <div class="rstat"><span class="rn">1</span><span class="rl">exploitable findings</span></div>
+      <div class="rstat"><span class="rn">1</span><span class="rl">bugs an attacker can reach</span></div>
       <div class="rarrow">→</div>
       <div class="rstat"><span class="rn ok">1</span><span class="rl">verified fixed</span></div>
       <div class="rarrow">→</div>
       <div class="rstat"><span class="rn ok">0</span><span class="rl">still present</span></div>
     </div>
-    <p class="psub">Each fix is confirmed by a re-scan — the finding is gone, not merely assumed fixed. Findings the agent did not fix are shown as still present, never hidden.</p><p class="psub assume"><strong>What this demo assumes:</strong> the coding agent and its model are the customer’s own — REACHABLE drives whatever agent the enclave already has. A future product phase could bundle a coding agent + REACHABLE + a local LLM as a single turnkey installation; that is <em>not</em> what we are demonstrating today.</p><p class="psub assume"><strong>Keys:</strong> this demo self-generates its mirror and enclave-host keys for the Sthenos-owned demo org (a CI preflight-auth step, regenerated on demand). A real customer generates theirs through the dashboard — in the browser, so the private key never leaves them, or as short-lived temporary test credentials — needing only a single firewall hole to sthenosec.com, never internet access.</p><p class="psub assume"><strong>Trust &amp; cryptography:</strong> software is admitted into the enclave only from a <strong>CNSA-aligned, post-quantum signed attestation</strong>; the connection to Sthenos is a <strong>mutually authenticated (mTLS)</strong> channel; data is <strong>encrypted at rest</strong>. The highest-assurance trust anchor sits exactly where it matters — on the code entering the air-gapped boundary.</p>
+    <p class="psub">Each fix is confirmed by a second scan. Anything the agent did not fix is shown as still present.</p>
       </div>
-      <div class="panel"><h2>Evidence</h2><ul class="prooflinks"><li><a class="prooflink" href="evidence/fixed.html">Full remediation proof</a><span class="psub">Per-finding outcomes: fixed, still present, introduced — every number from REACHABLE's own record.</span></li><li><a class="prooflink" href="evidence/code-diff-viewer.html">Side-by-side code diff</a><span class="psub">The exact code the offline agent changed, before vs after.</span></li></ul></div>
+      <div class="panel"><h2>Evidence</h2><ul class="prooflinks"><li><a class="prooflink" href="evidence/before.html">Before: what the scan found</a><span class="psub">The findings in the app before the agent touched it.</span></li><li><a class="prooflink" href="evidence/fixed.html">After: what was fixed</a><span class="psub">Each bug and what happened to it.</span></li><li><a class="prooflink" href="evidence/code-diff-viewer.html">Side-by-side code change</a><span class="psub">The exact lines the agent changed.</span></li><li><a class="prooflink" href="evidence/before-code-viewer.html">Code before</a><span class="psub">Browse the application as it was scanned.</span></li><li><a class="prooflink" href="evidence/after-code-viewer.html">Code after</a><span class="psub">Browse the application after the agent's fix.</span></li></ul></div>
       <ol class="stages">
       <li class="stage ok">
-        <div class="num">4</div>
+        <div class="num">8</div>
         <div class="body">
-          <div class="head"><span class="title">REACHABLE remediated the code</span>
+          <div class="head"><span class="title">REACHABLE scanned the application</span>
             <span class="badge ok">✓ Done</span></div>
-          <p class="blurb">An AI coding agent, itself offline, applies fixes for the exploitable findings.</p>
-          <p class="detail">Agent attempted 1, 1 verified fixed (model lane: hosted model claude-opus-5 via the mirror relay (api.anthropic.com)).</p>
+          <p class="blurb">The scan runs offline and separates the bugs an attacker can actually reach from the rest.</p>
+          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">Findings</span><span class="cval">2</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Exploitable</span><span class="cval">1</span></li></ul>
         </div>
       </li>
       <li class="stage ok">
-        <div class="num">5</div>
+        <div class="num">9</div>
         <div class="body">
-          <div class="head"><span class="title">Every actionable issue fixed</span>
+          <div class="head"><span class="title">Exploitable findings remediated, then published</span>
             <span class="badge ok">✓ Done</span></div>
-          <p class="blurb">A re-scan confirms the exploitable findings are gone — proven, not asserted.</p>
-          <p class="detail">Re-scan: 0 actionable findings remain — every exploitable issue is fixed.</p>
+          <p class="blurb">An AI coding agent fixes the bugs an attacker can reach; a second scan confirms it; the result is published to the account.</p>
+          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">Exploitable findings worked on</span><span class="cval">1</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Confirmed fixed by a second scan</span><span class="cval">1 (0 still present)</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Published to the account</span><span class="cval">sthenos-airgap-demo</span></li></ul>
+        </div>
+      </li>
+      <li class="stage ok">
+        <div class="num">10</div>
+        <div class="body">
+          <div class="head"><span class="title">Results published</span>
+            <span class="badge ok">✓ Done</span></div>
+          <p class="blurb">The scan and the fix are on the Sthenos dashboard, and this status page is public.</p>
+          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">Dashboard</span><span class="cval">sthenos-airgap-demo — repo docs-worker, scan stored</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Status page</span><span class="cval">https://sthenos-security.github.io/reach-airgap-demo/</span></li></ul>
         </div>
       </li>
       </ol>
     </section>
 
     <footer>
-      Every value above is recorded by REACHABLE during the run; stages without evidence read
-      <em>pending</em>, never a green they did not earn. The scanned application is the public
-      specimen in this repository. © 2026 Sthenos Security.
+      <p>Every number on this page comes from the run itself; a step with no record shows
+      <em>pending</em>. The sample application is public:
+      <a href="https://github.com/sthenos-security/reach-airgap-demo">github.com/sthenos-security/reach-airgap-demo</a>.</p>
+      <p>Learn more: <a href="https://sthenosec.com/airgap">sthenosec.com/airgap</a> ·
+      Talk to us: <a href="mailto:sales@sthenosec.com">sales@sthenosec.com</a></p>
+      <p class="copy">© 2026 Sthenos Security. All rights reserved.</p>
     </footer>
   </div>
   <script>

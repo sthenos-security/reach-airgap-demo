@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Before the fix</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0B0F19;color:#f8fafc;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:32px 20px 64px}
+h1{font-size:clamp(30px,4vw,48px);margin:10px 0}
+h2{font-size:20px;margin:34px 0 12px}
+a{color:#60a5fa}
+.eyebrow{color:#38bdf8;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+.muted{color:#94a3b8}
+.warn{color:#fca5a5}
+.cards{display:flex;gap:14px;flex-wrap:wrap;margin:22px 0}
+.card{flex:1 1 150px;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:16px;background:rgba(255,255,255,.02)}
+.card .n{font-size:34px;font-weight:700}
+.card .l{color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+.card.ok .n{color:#4ade80} .card.warnc .n{color:#fbbf24}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.07);vertical-align:top}
+th{color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.mono{font-family:Monaco,"Courier New",monospace;font-size:12px;color:#cbd5e1}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}
+.p-fixed_verified{background:rgba(74,222,128,.15);color:#4ade80}
+.p-still_present{background:rgba(251,191,36,.15);color:#fbbf24}
+.p-introduced{background:rgba(248,113,113,.15);color:#f87171}
+.p-fixed_unattributed,.p-fixed_file_broken,.p-unknown{background:rgba(148,163,184,.15);color:#cbd5e1}
+.s-CRITICAL{color:#f87171;font-weight:700} .s-HIGH{color:#fb923c;font-weight:700}
+.s-MEDIUM{color:#fbbf24} .s-LOW,.s-INFO{color:#94a3b8}
+.ba{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin:24px 0 10px}
+.ba-side{flex:1 1 165px;border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:18px;background:rgba(255,255,255,.02)}
+.ba-label{color:#94a3b8;font-size:11px;font-weight:800;letter-spacing:.16em}
+.ba-n{font-size:52px;font-weight:800;line-height:1.15}
+.ba-n.bad{color:#f87171} .ba-n.good{color:#4ade80}
+.ba-sub{color:#94a3b8;font-size:12px}
+.ba-arrow{color:#60a5fa;font-size:32px;font-weight:700}
+.story{color:#cbd5e1;font-size:15px;line-height:1.75;padding-left:22px;margin:18px 0}
+.story strong{color:#f8fafc}
+.diff .add{color:#4ade80}
+.diff .del{color:#f87171}
+.diff .meta{color:#60a5fa}
+.dochunk{color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:14px 0 4px}
+.diff{background:#070A12;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:16px;
+ overflow-x:auto;font-family:Monaco,"Courier New",monospace;font-size:12px;line-height:1.5;white-space:pre}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table-wrap table{min-width:640px}
+td.mono{overflow-wrap:anywhere}
+@media (max-width:600px){main{padding:20px 16px 40px} .ba-arrow{display:none}}
+.back{margin:0 0 12px;font-size:14px}.back a,.site-footer a{color:#60a5fa}.site-footer{margin:40px 0 0;padding:20px 16px;border-top:1px solid rgba(255,255,255,.08);color:#94a3b8;font-size:13px;text-align:center;overflow-wrap:anywhere}.site-footer p{margin:4px 0}
+</style></head><body><main><p class="back"><a href="../index.html">&larr; Back to demo status</a></p>
+    <p class="eyebrow">Before the fix</p>
+    <h1>What the scan found</h1>
+    
+    
+    
+
+    <div class="cards">
+      <div class="card warnc"><div class="n">1</div>
+        <div class="l">Exploitable</div></div>
+      <div class="card"><div class="n">1</div>
+        <div class="l">Not exploitable</div></div>
+    </div>
+
+    <h2>Exploitable &mdash; 1 finding</h2>
+    <p class="muted">REACHABLE handed these to the AI to fix.</p>
+    <div class='table-wrap'><table><thead><tr><th>#</th><th>Severity</th><th>Type</th><th>Finding</th>
+    <th>File</th></tr></thead><tbody><tr><td class='mono'>1</td><td class='sev s-MEDIUM'>MEDIUM</td><td>CWE</td><td>File read on a path built from external input without resolving symlinks and validating the result stays inside the expected directory — CWE-59 symlink following.</td><td class='mono'>app.py</td></tr></tbody></table></div>
+    <h2>Not exploitable &mdash; no fix needed (1)</h2><p class='muted'>The scanner flagged these, but the app never reaches them or they are not part of the running app.</p><div class='table-wrap'><table><thead><tr><th></th><th>Why no fix is needed</th><th>Severity</th><th>Type</th><th>Finding</th><th>File</th></tr></thead><tbody><tr><td class='mono'>1</td><td class='muted'>not reachable</td><td class='sev s-MEDIUM'>MEDIUM</td><td>MALWARE</td><td>Unsafe deserialization - can execute arbitrary code</td><td class='mono'>app.py</td></tr></tbody></table></div>
+
+    <h2>How the fix went</h2>
+    <div class='table-wrap'><table><thead><tr><th>Round</th><th>Started with</th><th>Fixed</th><th>Left</th><th>Time</th><th>How it ended</th></tr></thead><tbody><tr><td class='mono'>1</td><td class='mono'>1</td><td class='mono'>1</td><td class='mono'>0</td><td class='mono'>653.8s</td><td class='mono'>ran to completion</td></tr></tbody><tfoot><tr><th>Total</th><th class='mono'>1</th><th class='mono'>1</th><th class='mono'>0</th><th class='mono'>653.8s</th><th class='mono'>none killed</th></tr></tfoot></table></div>
+
+    <p class="muted"><a href="./fixed.html">After the fix &rarr;</a></p>
+    <footer class="site-footer"><p>Learn more: <a href="https://sthenosec.com/airgap">https://sthenosec.com/airgap</a> &middot; Talk to us: <a href="mailto:sales@sthenosec.com">sales@sthenosec.com</a></p><p>&copy; 2026 Sthenos Security.</p></footer></main></body></html>
