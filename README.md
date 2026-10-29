@@ -10,14 +10,14 @@ A second scan confirmed the fix.
 
 | Page | What it shows |
 |---|---|
-| **[Demo status page](https://sthenos-security.github.io/reach-airgap-demo/)** | The whole run: the isolation test, the firewall rules, the install, the scan, and the fix |
+| **[Demo status page](https://sthenos-security.github.io/reach-airgap-demo/)** | The whole run: the isolation test, firewall rules, install, scan, and fix. The header gives the exact generated timestamp in UTC. |
 | [Before: what the scan found](https://sthenos-security.github.io/reach-airgap-demo/evidence/before.html) | The findings before the agent touched the code |
 | [After: what was fixed](https://sthenos-security.github.io/reach-airgap-demo/evidence/fixed.html) | Each finding and its outcome: fixed, or still present |
 | [Side-by-side code change](https://sthenos-security.github.io/reach-airgap-demo/evidence/code-diff-viewer.html) | The exact lines the agent changed |
 | [Code before](https://sthenos-security.github.io/reach-airgap-demo/evidence/before-code-viewer.html) · [Code after](https://sthenos-security.github.io/reach-airgap-demo/evidence/after-code-viewer.html) | Browse the application at each step |
 
 Every page is generated from the run's own records, not written by hand. The
-"Generated" time on the status page is when that run finished.
+"Generated" timestamp on the status page is in UTC and identifies when that recorded run finished.
 
 ## What "air-gapped" means here
 
