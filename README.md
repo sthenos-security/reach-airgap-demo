@@ -1,4 +1,4 @@
-# REACHABLE — Air-Gap Demo
+# REACHABLE — Air-Gapped Demo
 
 ### ▶ [Open the demo status page](https://sthenos-security.github.io/reach-airgap-demo/)
 
