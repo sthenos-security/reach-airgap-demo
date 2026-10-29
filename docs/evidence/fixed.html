@@ -50,267 +50,274 @@ td.mono{overflow-wrap:anywhere}
 .back{margin:0 0 12px;font-size:14px}.back a,.site-footer a{color:#60a5fa}.site-footer{margin:40px 0 0;padding:20px 16px;border-top:1px solid rgba(255,255,255,.08);color:#94a3b8;font-size:13px;text-align:center;overflow-wrap:anywhere}.site-footer p{margin:4px 0}
 </style></head><body><main><p class="back"><a href="../index.html">&larr; Back to demo status</a></p>
     <p class="eyebrow">After the fix</p>
-    <h1>The AI found and fixed the security bug</h1>
+    <h1>Fixed 4 of 5 security bugs</h1>
     
     
     
-    <p class="muted">Run 2026-10-27 19:36 UTC</p>
+    <p class="muted">Run 2026-10-29 21:16 UTC</p>
 
     <div class="ba">
       <div class="ba-side">
         <div class="ba-label">EXPLOITABLE</div>
-        <div class="ba-n bad">1</div>
+        <div class="ba-n bad">5</div>
       </div>
       <div class="ba-arrow">&rarr;</div>
       <div class="ba-side">
         <div class="ba-label">FIXED</div>
-        <div class="ba-n good">1</div>
+        <div class="ba-n good">4</div>
       </div>
       <div class="ba-arrow">&rarr;</div>
       <div class="ba-side">
         <div class="ba-label">STILL PRESENT</div>
-        <div class="ba-n good">0</div>
+        <div class="ba-n bad">1</div>
       </div>
     </div>
     
 
-    <h2>Exploitable &mdash; 1 finding</h2>
+    <h2>Exploitable &mdash; 5 findings</h2>
     <p class="muted">REACHABLE handed these to the AI to fix.</p>
     <div class='table-wrap'><table><thead><tr><th>#</th><th>Result</th><th>Severity</th><th>Type</th><th>Finding</th><th>File</th></tr></thead>
-    <tbody><tr class='o-fixed_verified'><td class='mono'>1</td><td><span class='pill p-fixed_verified' title='The AI changed this file and the re-scan no longer finds the bug.'>Fixed — verified by re-scan</span></td><td class='sev s-MEDIUM'>MEDIUM</td><td>CWE</td><td>File read on a path built from external input without resolving symlinks and validating the result stays inside the expected directory — CWE-59 symlink following.</td><td class='mono'>app.py</td></tr></tbody></table></div>
+    <tbody><tr class='o-still_present'><td class='mono'>1</td><td><span class='pill p-still_present' title='Still present after remediation.'>Not fixed</span></td><td class='sev s-CRITICAL'>CRITICAL</td><td>CWE</td><td>User input in HTML template literal — CWE-79 XSS risk</td><td class='mono'>portal/public/app.js</td></tr><tr class='o-fixed_verified'><td class='mono'>2</td><td><span class='pill p-fixed_verified' title='The AI changed this file and the re-scan no longer finds the bug.'>Fixed — verified by re-scan</span></td><td class='sev s-MEDIUM'>MEDIUM</td><td>CWE</td><td>File read on a path built from external input without resolving symlinks and validating the result stays inside the expected directory — CWE-59 symlink following.</td><td class='mono'>docs-worker/app.py</td></tr><tr class='o-fixed_verified'><td class='mono'>3</td><td><span class='pill p-fixed_verified' title='The AI changed this file and the re-scan no longer finds the bug.'>Fixed — verified by re-scan</span></td><td class='sev s-MEDIUM'>MEDIUM</td><td>CVE</td><td>Known vulnerability in morgan (GHSA-jxfw-x594-9x9m)</td><td class='mono'>portal/src/server.ts</td></tr><tr class='o-fixed_verified'><td class='mono'>4</td><td><span class='pill p-fixed_verified' title='The AI changed this file and the re-scan no longer finds the bug.'>Fixed — verified by re-scan</span></td><td class='sev s-MEDIUM'>MEDIUM</td><td>CVE</td><td>Known vulnerability in morgan (GHSA-9f6g-j8ch-79g4)</td><td class='mono'>portal/src/server.ts</td></tr><tr class='o-fixed_verified'><td class='mono'>5</td><td><span class='pill p-fixed_verified' title='The AI changed this file and the re-scan no longer finds the bug.'>Fixed — verified by re-scan</span></td><td class='sev s-MEDIUM'>MEDIUM</td><td>CWE</td><td>Express app without helmet - missing security headers</td><td class='mono'>portal/src/server.ts</td></tr></tbody></table></div>
 
     <h2>The code the AI wrote</h2>
-    <pre class='diff'><span class='meta'>diff --git a/app.py b/app.py</span>
-<span class=''>index 4267098..14c8754 100644</span>
-<span class=''>--- a/app.py</span>
-<span class=''>+++ b/app.py</span>
-<span class='meta'>@@ -16,6 +16,10 @@ import yaml  # document frontmatter parsing (resolved from the enclave&#x27;s private</span>
-<span class=''> </span>
-<span class=''> </span>
-<span class=''> ROOT = Path(__file__).resolve().parents[1]</span>
-<span class='add'>+# Trusted root that every externally configurable storage path must stay inside.</span>
-<span class='add'>+# Defaults to the repository root, so the documented `python3 app.py` run path is</span>
-<span class='add'>+# unchanged; deployments that relocate storage set TREASURY_DATA_ROOT explicitly.</span>
-<span class='add'>+DATA_ROOT = Path(os.environ.get(&quot;TREASURY_DATA_ROOT&quot;, ROOT)).resolve()</span>
-<span class=''> DB_PATH = Path(os.environ.get(&quot;TREASURY_DB_PATH&quot;, ROOT / &quot;data&quot; / &quot;treasury.db&quot;))</span>
-<span class=''> SCHEMA_PATH = ROOT / &quot;scripts&quot; / &quot;schema.sql&quot;</span>
-<span class=''> UPLOAD_ROOT = Path(os.environ.get(&quot;TREASURY_UPLOAD_ROOT&quot;, ROOT / &quot;uploads&quot; / &quot;docs&quot;))</span>
-<span class='meta'>@@ -32,18 +36,41 @@ ROLE_RANK = {</span>
+    <pre class='diff'><span class='meta'>diff --git a/docs-worker/app.py b/docs-worker/app.py</span>
+<span class=''>index 4267098..f58674b 100644</span>
+<span class=''>--- a/docs-worker/app.py</span>
+<span class=''>+++ b/docs-worker/app.py</span>
+<span class='meta'>@@ -32,9 +32,22 @@ ROLE_RANK = {</span>
 <span class=''> }</span>
 <span class=''> </span>
 <span class=''> </span>
-<span class='add'>+class UnsafeStoragePath(ValueError):</span>
-<span class='add'>+    &quot;&quot;&quot;Raised when a configured storage path escapes the trusted data root.&quot;&quot;&quot;</span>
+<span class='add'>+def resolve_within(path: Path, trusted_root: Path) -&gt; Path:</span>
+<span class='add'>+    &quot;&quot;&quot;Resolve symlinks in ``path`` and require the result to stay inside ``trusted_root``.</span>
 <span class='add'>+</span>
-<span class='add'>+</span>
-<span class='add'>+def resolve_within(base: Path, candidate: Path, label: str) -&gt; Path:</span>
-<span class='add'>+    &quot;&quot;&quot;Fully resolve `candidate` and require the result to stay inside `base`.</span>
-<span class='add'>+</span>
-<span class='add'>+    `Path.resolve()` collapses `..` segments and follows every symlink in the</span>
-<span class='add'>+    portion of the path that already exists, so an attacker-planted symlink</span>
-<span class='add'>+    (e.g. `data/treasury.db` -&gt; `/etc/shadow`, or an absolute/traversal value in</span>
-<span class='add'>+    `TREASURY_DB_PATH`) resolves to its real target before the containment check</span>
-<span class='add'>+    runs. The resolved path is returned so callers open the real location rather</span>
-<span class='add'>+    than the symlink, which also closes the resolve/open TOCTOU window.</span>
+<span class='add'>+    Raises ValueError when the resolved target escapes the trusted root (CWE-59).</span>
 <span class='add'>+    &quot;&quot;&quot;</span>
-<span class='add'>+    base_resolved = base.resolve()</span>
-<span class='add'>+    resolved = Path(candidate).expanduser().resolve()</span>
-<span class='add'>+    if resolved != base_resolved and base_resolved not in resolved.parents:</span>
-<span class='add'>+        raise UnsafeStoragePath(f&quot;{label} resolves outside the trusted data root&quot;)</span>
+<span class='add'>+    root = Path(trusted_root).resolve()</span>
+<span class='add'>+    resolved = Path(path).resolve()</span>
+<span class='add'>+    if resolved != root and not resolved.is_relative_to(root):</span>
+<span class='add'>+        raise ValueError(f&quot;path {path} resolves outside trusted root {root}&quot;)</span>
 <span class='add'>+    return resolved</span>
 <span class='add'>+</span>
 <span class='add'>+</span>
 <span class=''> def connect() -&gt; sqlite3.Connection:</span>
-<span class='del'>-    DB_PATH.parent.mkdir(parents=True, exist_ok=True)</span>
+<span class=''>     DB_PATH.parent.mkdir(parents=True, exist_ok=True)</span>
 <span class='del'>-    conn = sqlite3.connect(DB_PATH)</span>
-<span class='add'>+    db_path = resolve_within(DATA_ROOT, DB_PATH, &quot;database path&quot;)</span>
-<span class='add'>+    db_path.parent.mkdir(parents=True, exist_ok=True)</span>
-<span class='add'>+    conn = sqlite3.connect(db_path)</span>
+<span class='add'>+    db_file = resolve_within(DB_PATH, DB_PATH.parent)</span>
+<span class='add'>+    conn = sqlite3.connect(db_file)</span>
 <span class=''>     conn.row_factory = sqlite3.Row</span>
 <span class=''>     conn.execute(&quot;PRAGMA foreign_keys = ON&quot;)</span>
 <span class=''>     return conn</span>
-<span class=''> </span>
+<span class='meta'>@@ -42,7 +55,7 @@ def connect() -&gt; sqlite3.Connection:</span>
 <span class=''> </span>
 <span class=''> def init_db() -&gt; None:</span>
-<span class='add'>+    schema_path = resolve_within(DATA_ROOT, SCHEMA_PATH, &quot;schema path&quot;)</span>
 <span class=''>     with connect() as conn:</span>
 <span class='del'>-        conn.executescript(SCHEMA_PATH.read_text())</span>
-<span class='del'>-    UPLOAD_ROOT.mkdir(parents=True, exist_ok=True)</span>
-<span class='add'>+        conn.executescript(schema_path.read_text())</span>
-<span class='add'>+    resolve_within(DATA_ROOT, UPLOAD_ROOT, &quot;upload root&quot;).mkdir(parents=True, exist_ok=True)</span>
+<span class='add'>+        conn.executescript(resolve_within(SCHEMA_PATH, ROOT / &quot;scripts&quot;).read_text())</span>
+<span class=''>     UPLOAD_ROOT.mkdir(parents=True, exist_ok=True)</span>
 <span class=''> </span>
 <span class=''> </span>
-<span class=''> def lookup_user(user_id: str) -&gt; dict | None:</span>
-<span class='meta'>diff --git a/test_app_paths.py b/test_app_paths.py</span>
+<span class='meta'>diff --git a/docs-worker/test_app.py b/docs-worker/test_app.py</span>
 <span class=''>new file mode 100644</span>
-<span class=''>index 0000000..d56d38f</span>
+<span class=''>index 0000000..2c7ad61</span>
 <span class=''>--- /dev/null</span>
-<span class=''>+++ b/test_app_paths.py</span>
-<span class='meta'>@@ -0,0 +1,157 @@</span>
-<span class='add'>+&quot;&quot;&quot;Regression tests for CWE-59 symlink containment on docs-worker storage paths.</span>
-<span class='add'>+</span>
-<span class='add'>+Covers the reachable `init_db -&gt; connect` flow: externally configurable storage</span>
-<span class='add'>+paths must be fully resolved and confined to the trusted data root before any</span>
-<span class='add'>+file is opened or read.</span>
-<span class='add'>+</span>
-<span class='add'>+Run with the stdlib harness (no third-party test dependency):</span>
-<span class='add'>+</span>
-<span class='add'>+    python3 -m unittest test_app_paths -v</span>
-<span class='add'>+&quot;&quot;&quot;</span>
-<span class='add'>+</span>
-<span class='add'>+from __future__ import annotations</span>
-<span class='add'>+</span>
+<span class=''>+++ b/docs-worker/test_app.py</span>
+<span class='meta'>@@ -0,0 +1,64 @@</span>
 <span class='add'>+import os</span>
-<span class='add'>+import sqlite3</span>
 <span class='add'>+import tempfile</span>
 <span class='add'>+import unittest</span>
 <span class='add'>+from pathlib import Path</span>
-<span class='add'>+from unittest import mock</span>
 <span class='add'>+</span>
 <span class='add'>+import app</span>
 <span class='add'>+</span>
-<span class='add'>+SCHEMA_SQL = &quot;CREATE TABLE IF NOT EXISTS documents (id TEXT PRIMARY KEY);&quot;</span>
 <span class='add'>+</span>
-<span class='add'>+</span>
-<span class='add'>+class StoragePathContainmentTests(unittest.TestCase):</span>
-<span class='add'>+    def setUp(self) -&gt; None:</span>
-<span class='add'>+        # Sandbox lives outside the repository under test.</span>
+<span class='add'>+class ResolveWithinTests(unittest.TestCase):</span>
+<span class='add'>+    def setUp(self):</span>
 <span class='add'>+        self._tmp = tempfile.TemporaryDirectory()</span>
-<span class='add'>+        self.addCleanup(self._tmp.cleanup)</span>
-<span class='add'>+        self.root = Path(self._tmp.name).resolve()</span>
+<span class='add'>+        self.base = Path(self._tmp.name) / &quot;base&quot;</span>
+<span class='add'>+        self.base.mkdir()</span>
+<span class='add'>+        self.outside = Path(self._tmp.name) / &quot;outside.txt&quot;</span>
+<span class='add'>+        self.outside.write_text(&quot;outside&quot;)</span>
 <span class='add'>+</span>
-<span class='add'>+        self.data_root = self.root / &quot;service&quot;</span>
-<span class='add'>+        (self.data_root / &quot;data&quot;).mkdir(parents=True)</span>
-<span class='add'>+        (self.data_root / &quot;scripts&quot;).mkdir(parents=True)</span>
+<span class='add'>+    def tearDown(self):</span>
+<span class='add'>+        self._tmp.cleanup()</span>
 <span class='add'>+</span>
-<span class='add'>+        self.schema = self.data_root / &quot;scripts&quot; / &quot;schema.sql&quot;</span>
-<span class='add'>+        self.schema.write_text(SCHEMA_SQL)</span>
+<span class='add'>+    def test_legitimate_file_inside_root(self):</span>
+<span class='add'>+        target = self.base / &quot;schema.sql&quot;</span>
+<span class='add'>+        target.write_text(&quot;CREATE TABLE t (id INTEGER);&quot;)</span>
+<span class='add'>+        self.assertEqual(app.resolve_within(target, self.base), target.resolve())</span>
 <span class='add'>+</span>
-<span class='add'>+        # Host file the attacker wants to reach; never inside data_root.</span>
-<span class='add'>+        self.outside = self.root / &quot;outside&quot; / &quot;id_rsa&quot;</span>
-<span class='add'>+        self.outside.parent.mkdir(parents=True)</span>
-<span class='add'>+        self.outside.write_text(&quot;PRIVATE KEY MATERIAL&quot;)</span>
+<span class='add'>+    def test_symlink_escape_rejected(self):</span>
+<span class='add'>+        link = self.base / &quot;schema.sql&quot;</span>
+<span class='add'>+        os.symlink(self.outside, link)</span>
+<span class='add'>+        with self.assertRaises(ValueError):</span>
+<span class='add'>+            app.resolve_within(link, self.base)</span>
 <span class='add'>+</span>
-<span class='add'>+    def _patch(self, **overrides):</span>
-<span class='add'>+        values = {</span>
-<span class='add'>+            &quot;DATA_ROOT&quot;: self.data_root,</span>
-<span class='add'>+            &quot;DB_PATH&quot;: self.data_root / &quot;data&quot; / &quot;treasury.db&quot;,</span>
-<span class='add'>+            &quot;SCHEMA_PATH&quot;: self.schema,</span>
-<span class='add'>+            &quot;UPLOAD_ROOT&quot;: self.data_root / &quot;uploads&quot; / &quot;docs&quot;,</span>
-<span class='add'>+        }</span>
-<span class='add'>+        values.update(overrides)</span>
-<span class='add'>+        return mock.patch.multiple(app, **values)</span>
+<span class='add'>+    def test_dotdot_traversal_rejected(self):</span>
+<span class='add'>+        with self.assertRaises(ValueError):</span>
+<span class='add'>+            app.resolve_within(self.base / &quot;..&quot; / &quot;outside.txt&quot;, self.base)</span>
 <span class='add'>+</span>
-<span class='add'>+    # --- legitimate flow still works exactly as before -------------------</span>
+<span class='add'>+    def test_absolute_path_rejected(self):</span>
+<span class='add'>+        with self.assertRaises(ValueError):</span>
+<span class='add'>+            app.resolve_within(self.outside, self.base)</span>
 <span class='add'>+</span>
-<span class='add'>+    def test_connect_opens_database_inside_data_root(self) -&gt; None:</span>
-<span class='add'>+        with self._patch():</span>
+<span class='add'>+    def test_connect_rejects_symlinked_db(self):</span>
+<span class='add'>+        link = self.base / &quot;treasury.db&quot;</span>
+<span class='add'>+        os.symlink(self.outside, link)</span>
+<span class='add'>+        original = app.DB_PATH</span>
+<span class='add'>+        app.DB_PATH = link</span>
+<span class='add'>+        try:</span>
+<span class='add'>+            with self.assertRaises(ValueError):</span>
+<span class='add'>+                app.connect()</span>
+<span class='add'>+        finally:</span>
+<span class='add'>+            app.DB_PATH = original</span>
+<span class='add'>+</span>
+<span class='add'>+    def test_connect_legitimate_db(self):</span>
+<span class='add'>+        original = app.DB_PATH</span>
+<span class='add'>+        app.DB_PATH = self.base / &quot;treasury.db&quot;</span>
+<span class='add'>+        try:</span>
 <span class='add'>+            conn = app.connect()</span>
-<span class='add'>+            self.addCleanup(conn.close)</span>
-<span class='add'>+            self.assertIsInstance(conn, sqlite3.Connection)</span>
-<span class='add'>+            self.assertIs(conn.row_factory, sqlite3.Row)</span>
-<span class='add'>+            conn.executescript(SCHEMA_SQL)</span>
-<span class='add'>+            row = conn.execute(&quot;SELECT COUNT(*) AS count FROM documents&quot;).fetchone()</span>
-<span class='add'>+            self.assertEqual(row[&quot;count&quot;], 0)</span>
-<span class='add'>+        self.assertTrue((self.data_root / &quot;data&quot; / &quot;treasury.db&quot;).exists())</span>
-<span class='add'>+</span>
-<span class='add'>+    def test_init_db_applies_schema_and_creates_upload_root(self) -&gt; None:</span>
-<span class='add'>+        with self._patch():</span>
-<span class='add'>+            app.init_db()</span>
-<span class='add'>+            conn = sqlite3.connect(self.data_root / &quot;data&quot; / &quot;treasury.db&quot;)</span>
-<span class='add'>+            self.addCleanup(conn.close)</span>
-<span class='add'>+            names = {r[0] for r in conn.execute(</span>
-<span class='add'>+                &quot;SELECT name FROM sqlite_master WHERE type = &#x27;table&#x27;&quot;</span>
-<span class='add'>+            )}</span>
-<span class='add'>+            self.assertIn(&quot;documents&quot;, names)</span>
-<span class='add'>+        self.assertTrue((self.data_root / &quot;uploads&quot; / &quot;docs&quot;).is_dir())</span>
-<span class='add'>+</span>
-<span class='add'>+    def test_resolve_within_accepts_the_data_root_itself(self) -&gt; None:</span>
-<span class='add'>+        self.assertEqual(</span>
-<span class='add'>+            app.resolve_within(self.data_root, self.data_root, &quot;data root&quot;),</span>
-<span class='add'>+            self.data_root,</span>
-<span class='add'>+        )</span>
-<span class='add'>+</span>
-<span class='add'>+    # --- attack inputs are rejected at the sink --------------------------</span>
-<span class='add'>+</span>
-<span class='add'>+    def test_symlinked_database_path_is_rejected(self) -&gt; None:</span>
-<span class='add'>+        planted = self.data_root / &quot;data&quot; / &quot;treasury.db&quot;</span>
-<span class='add'>+        planted.symlink_to(self.outside)</span>
-<span class='add'>+        with self._patch(DB_PATH=planted):</span>
-<span class='add'>+            with self.assertRaises(app.UnsafeStoragePath):</span>
-<span class='add'>+                app.connect()</span>
-<span class='add'>+        self.assertEqual(self.outside.read_text(), &quot;PRIVATE KEY MATERIAL&quot;)</span>
-<span class='add'>+</span>
-<span class='add'>+    def test_symlinked_parent_directory_is_rejected(self) -&gt; None:</span>
-<span class='add'>+        (self.data_root / &quot;linked&quot;).symlink_to(self.outside.parent, target_is_directory=True)</span>
-<span class='add'>+        with self._patch(DB_PATH=self.data_root / &quot;linked&quot; / &quot;treasury.db&quot;):</span>
-<span class='add'>+            with self.assertRaises(app.UnsafeStoragePath):</span>
-<span class='add'>+                app.connect()</span>
-<span class='add'>+</span>
-<span class='add'>+    def test_symlinked_schema_path_is_rejected_by_init_db(self) -&gt; None:</span>
-<span class='add'>+        evil_schema = self.root / &quot;outside&quot; / &quot;evil.sql&quot;</span>
-<span class='add'>+        evil_schema.write_text(&quot;DROP TABLE IF EXISTS documents;&quot;)</span>
-<span class='add'>+        planted = self.data_root / &quot;scripts&quot; / &quot;planted.sql&quot;</span>
-<span class='add'>+        planted.symlink_to(evil_schema)</span>
-<span class='add'>+        with self._patch(SCHEMA_PATH=planted):</span>
-<span class='add'>+            with self.assertRaises(app.UnsafeStoragePath):</span>
-<span class='add'>+                app.init_db()</span>
-<span class='add'>+</span>
-<span class='add'>+    def test_relative_traversal_database_path_is_rejected(self) -&gt; None:</span>
-<span class='add'>+        with self._patch(DB_PATH=self.data_root / &quot;data&quot; / &quot;..&quot; / &quot;..&quot; / &quot;outside&quot; / &quot;id_rsa&quot;):</span>
-<span class='add'>+            with self.assertRaises(app.UnsafeStoragePath):</span>
-<span class='add'>+                app.connect()</span>
-<span class='add'>+</span>
-<span class='add'>+    def test_url_encoded_traversal_is_not_decoded_into_an_escape(self) -&gt; None:</span>
-<span class='add'>+        # %2e%2e%2f must stay an inert literal segment, never a traversal.</span>
-<span class='add'>+        candidate = self.data_root / &quot;data&quot; / &quot;%2e%2e%2f%2e%2e%2fid_rsa&quot;</span>
-<span class='add'>+        resolved = app.resolve_within(self.data_root, candidate, &quot;database path&quot;)</span>
-<span class='add'>+        self.assertEqual(resolved.parent, (self.data_root / &quot;data&quot;).resolve())</span>
-<span class='add'>+</span>
-<span class='add'>+    def test_absolute_outside_database_path_is_rejected(self) -&gt; None:</span>
-<span class='add'>+        with self._patch(DB_PATH=self.outside):</span>
-<span class='add'>+            with self.assertRaises(app.UnsafeStoragePath):</span>
-<span class='add'>+                app.connect()</span>
-<span class='add'>+</span>
-<span class='add'>+    def test_sibling_prefix_directory_is_not_treated_as_inside(self) -&gt; None:</span>
-<span class='add'>+        sibling = self.root / &quot;service-evil&quot; / &quot;treasury.db&quot;</span>
-<span class='add'>+        sibling.parent.mkdir(parents=True)</span>
-<span class='add'>+        with self._patch(DB_PATH=sibling):</span>
-<span class='add'>+            with self.assertRaises(app.UnsafeStoragePath):</span>
-<span class='add'>+                app.connect()</span>
-<span class='add'>+</span>
-<span class='add'>+    def test_symlinked_upload_root_is_rejected_by_init_db(self) -&gt; None:</span>
-<span class='add'>+        planted = self.data_root / &quot;uploads&quot;</span>
-<span class='add'>+        planted.parent.mkdir(parents=True, exist_ok=True)</span>
-<span class='add'>+        planted.symlink_to(self.outside.parent, target_is_directory=True)</span>
-<span class='add'>+        with self._patch(UPLOAD_ROOT=planted / &quot;docs&quot;):</span>
-<span class='add'>+            with self.assertRaises(app.UnsafeStoragePath):</span>
-<span class='add'>+                app.init_db()</span>
-<span class='add'>+</span>
-<span class='add'>+</span>
-<span class='add'>+class EnvironmentDefaultTests(unittest.TestCase):</span>
-<span class='add'>+    &quot;&quot;&quot;The documented default run path must keep resolving inside the repo.&quot;&quot;&quot;</span>
-<span class='add'>+</span>
-<span class='add'>+    def test_packaged_defaults_are_contained(self) -&gt; None:</span>
-<span class='add'>+        self.assertIsNone(os.environ.get(&quot;TREASURY_DATA_ROOT&quot;))</span>
-<span class='add'>+        for label, candidate in (</span>
-<span class='add'>+            (&quot;database path&quot;, app.ROOT / &quot;data&quot; / &quot;treasury.db&quot;),</span>
-<span class='add'>+            (&quot;schema path&quot;, app.ROOT / &quot;scripts&quot; / &quot;schema.sql&quot;),</span>
-<span class='add'>+            (&quot;upload root&quot;, app.ROOT / &quot;uploads&quot; / &quot;docs&quot;),</span>
-<span class='add'>+        ):</span>
-<span class='add'>+            with self.subTest(label=label):</span>
-<span class='add'>+                app.resolve_within(app.ROOT, candidate, label)</span>
+<span class='add'>+            try:</span>
+<span class='add'>+                self.assertEqual(conn.execute(&quot;SELECT 1&quot;).fetchone()[0], 1)</span>
+<span class='add'>+            finally:</span>
+<span class='add'>+                conn.close()</span>
+<span class='add'>+        finally:</span>
+<span class='add'>+            app.DB_PATH = original</span>
 <span class='add'>+</span>
 <span class='add'>+</span>
 <span class='add'>+if __name__ == &quot;__main__&quot;:</span>
-<span class='add'>+    unittest.main()</span></pre>
+<span class='add'>+    unittest.main()</span>
+<span class='meta'>diff --git a/portal/package-lock.json b/portal/package-lock.json</span>
+<span class=''>index b627e1c..67c94b1 100644</span>
+<span class=''>--- a/portal/package-lock.json</span>
+<span class=''>+++ b/portal/package-lock.json</span>
+<span class='meta'>@@ -10,7 +10,8 @@</span>
+<span class=''>       &quot;dependencies&quot;: {</span>
+<span class=''>         &quot;better-sqlite3&quot;: &quot;^11.10.0&quot;,</span>
+<span class=''>         &quot;express&quot;: &quot;^4.19.2&quot;,</span>
+<span class='del'>-        &quot;morgan&quot;: &quot;^1.10.0&quot;</span>
+<span class='add'>+        &quot;helmet&quot;: &quot;8.3.0&quot;,</span>
+<span class='add'>+        &quot;morgan&quot;: &quot;1.12.1&quot;</span>
+<span class=''>       },</span>
+<span class=''>       &quot;devDependencies&quot;: {</span>
+<span class=''>         &quot;@types/better-sqlite3&quot;: &quot;^7.6.11&quot;,</span>
+<span class='meta'>@@ -1209,6 +1210,17 @@</span>
+<span class=''>         &quot;node&quot;: &quot;&gt;= 0.4&quot;</span>
+<span class=''>       }</span>
+<span class=''>     },</span>
+<span class='add'>+    &quot;node_modules/helmet&quot;: {</span>
+<span class='add'>+      &quot;version&quot;: &quot;8.3.0&quot;,</span>
+<span class='add'>+      &quot;resolved&quot;: &quot;http://registry-npm:4873/helmet/-/helmet-8.3.0.tgz&quot;,</span>
+<span class='add'>+      &quot;integrity&quot;: &quot;sha512-Qgpiaws3Sm30Av8Eah6sjMCZZwjlBu+E68rhpCWBshY1lb09HtLwj5GviX0OyQIn+ulUS0iX0AxN5n3tLZzz1w==&quot;,</span>
+<span class='add'>+      &quot;engines&quot;: {</span>
+<span class='add'>+        &quot;node&quot;: &quot;&gt;=18.0.0&quot;</span>
+<span class='add'>+      },</span>
+<span class='add'>+      &quot;funding&quot;: {</span>
+<span class='add'>+        &quot;url&quot;: &quot;https://github.com/sponsors/EvanHahn&quot;</span>
+<span class='add'>+      }</span>
+<span class='add'>+    },</span>
+<span class=''>     &quot;node_modules/http-errors&quot;: {</span>
+<span class=''>       &quot;version&quot;: &quot;2.0.1&quot;,</span>
+<span class=''>       &quot;resolved&quot;: &quot;https://registry.npmjs.org/http-errors/-/http-errors-2.0.1.tgz&quot;,</span>
+<span class='meta'>@@ -1379,10 +1391,9 @@</span>
+<span class=''>       &quot;license&quot;: &quot;MIT&quot;</span>
+<span class=''>     },</span>
+<span class=''>     &quot;node_modules/morgan&quot;: {</span>
+<span class='del'>-      &quot;version&quot;: &quot;1.11.0&quot;,</span>
+<span class='del'>-      &quot;resolved&quot;: &quot;https://registry.npmjs.org/morgan/-/morgan-1.11.0.tgz&quot;,</span>
+<span class='del'>-      &quot;integrity&quot;: &quot;sha512-zSkVu3t18r39pw4ixfBKvfZi3y2UOqr7d4WYwcj3m8nXpEQK4rPO6GLzs/CExoRgmX3y9EjmmcXqv6jq0SK46g==&quot;,</span>
+<span class='del'>-      &quot;license&quot;: &quot;MIT&quot;,</span>
+<span class='add'>+      &quot;version&quot;: &quot;1.12.1&quot;,</span>
+<span class='add'>+      &quot;resolved&quot;: &quot;http://registry-npm:4873/morgan/-/morgan-1.12.1.tgz&quot;,</span>
+<span class='add'>+      &quot;integrity&quot;: &quot;sha512-tljKC0ex20AjO58Ob/eZ53JloycbVswbVNCHx6V6VLGzqt/w8dIynVGL0G8qVjNKwiA7sYSogCrN6QtJ82IV+g==&quot;,</span>
+<span class=''>       &quot;dependencies&quot;: {</span>
+<span class=''>         &quot;basic-auth&quot;: &quot;~2.0.1&quot;,</span>
+<span class=''>         &quot;debug&quot;: &quot;2.6.9&quot;,</span>
+<span class='meta'>diff --git a/portal/package.json b/portal/package.json</span>
+<span class=''>index ae23234..45349b1 100644</span>
+<span class=''>--- a/portal/package.json</span>
+<span class=''>+++ b/portal/package.json</span>
+<span class='meta'>@@ -12,7 +12,8 @@</span>
+<span class=''>   &quot;dependencies&quot;: {</span>
+<span class=''>     &quot;better-sqlite3&quot;: &quot;^11.10.0&quot;,</span>
+<span class=''>     &quot;express&quot;: &quot;^4.19.2&quot;,</span>
+<span class='del'>-    &quot;morgan&quot;: &quot;^1.10.0&quot;</span>
+<span class='add'>+    &quot;helmet&quot;: &quot;8.3.0&quot;,</span>
+<span class='add'>+    &quot;morgan&quot;: &quot;1.12.1&quot;</span>
+<span class=''>   },</span>
+<span class=''>   &quot;devDependencies&quot;: {</span>
+<span class=''>     &quot;@types/better-sqlite3&quot;: &quot;^7.6.11&quot;,</span>
+<span class='meta'>@@ -23,4 +24,3 @@</span>
+<span class=''>     &quot;typescript&quot;: &quot;^5.8.2&quot;</span>
+<span class=''>   }</span>
+<span class=''> }</span>
+<span class='del'>-</span>
+<span class='meta'>diff --git a/portal/public/app.js b/portal/public/app.js</span>
+<span class=''>index df311c2..54f35bf 100644</span>
+<span class=''>--- a/portal/public/app.js</span>
+<span class=''>+++ b/portal/public/app.js</span>
+<span class='meta'>@@ -58,7 +58,7 @@ function renderAccounts(accounts) {</span>
+<span class=''>       account.name,</span>
+<span class=''>       account.bank_name,</span>
+<span class=''>       money.format(account.balance_cents / 100),</span>
+<span class='del'>-      `&lt;span class=&quot;pill&quot;&gt;${account.status}&lt;/span&gt;`</span>
+<span class='add'>+      { html: `&lt;span class=&quot;pill&quot;&gt;${escapeHtml(account.status)}&lt;/span&gt;` }</span>
+<span class=''>     ])</span>
+<span class=''>   );</span>
+<span class=''> }</span>
+<span class='meta'>@@ -86,7 +86,7 @@ function renderTransfers(transfers) {</span>
+<span class=''>       transfer.beneficiary,</span>
+<span class=''>       transfer.source_account,</span>
+<span class=''>       money.format(transfer.amount_cents / 100),</span>
+<span class='del'>-      `&lt;span class=&quot;pill&quot;&gt;${escapeHtml(transfer.status)}&lt;/span&gt;`,</span>
+<span class='add'>+      { html: `&lt;span class=&quot;pill&quot;&gt;${escapeHtml(transfer.status)}&lt;/span&gt;` },</span>
+<span class=''>       transfer.requested_by</span>
+<span class=''>     ])</span>
+<span class=''>   );</span>
+<span class='meta'>@@ -113,10 +113,17 @@ function table(headers, rows) {</span>
+<span class=''>     return `&lt;div class=&quot;list&quot;&gt;&lt;div class=&quot;subtle&quot;&gt;No records&lt;/div&gt;&lt;/div&gt;`;</span>
+<span class=''>   }</span>
+<span class=''>   return `&lt;table&gt;&lt;thead&gt;&lt;tr&gt;${headers.map((header) =&gt; `&lt;th&gt;${escapeHtml(header)}&lt;/th&gt;`).join(&quot;&quot;)}&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;${rows</span>
+<span class='del'>-    .map((row) =&gt; `&lt;tr&gt;${row.map((cell) =&gt; `&lt;td&gt;${cell}&lt;/td&gt;`).join(&quot;&quot;)}&lt;/tr&gt;`)</span>
+<span class='add'>+    .map((row) =&gt; `&lt;tr&gt;${row.map((cell) =&gt; `&lt;td&gt;${renderCell(cell)}&lt;/td&gt;`).join(&quot;&quot;)}&lt;/tr&gt;`)</span>
+<span class=''>     .join(&quot;&quot;)}&lt;/tbody&gt;&lt;/table&gt;`;</span>
+<span class=''> }</span>
+<span class=''> </span>
+<span class='add'>+function renderCell(cell) {</span>
+<span class='add'>+  if (cell !== null &amp;&amp; typeof cell === &quot;object&quot; &amp;&amp; typeof cell.html === &quot;string&quot;) {</span>
+<span class='add'>+    return cell.html;</span>
+<span class='add'>+  }</span>
+<span class='add'>+  return escapeHtml(cell);</span>
+<span class='add'>+}</span>
+<span class='add'>+</span>
+<span class=''> function escapeHtml(value) {</span>
+<span class=''>   return String(value)</span>
+<span class=''>     .replaceAll(&quot;&amp;&quot;, &quot;&amp;amp;&quot;)</span>
+<span class='meta'>diff --git a/portal/src/server.ts b/portal/src/server.ts</span>
+<span class=''>index 260fb4e..53df912 100644</span>
+<span class=''>--- a/portal/src/server.ts</span>
+<span class=''>+++ b/portal/src/server.ts</span>
+<span class='meta'>@@ -1,4 +1,5 @@</span>
+<span class=''> import express from &quot;express&quot;;</span>
+<span class='add'>+import helmet from &quot;helmet&quot;;</span>
+<span class=''> import morgan from &quot;morgan&quot;;</span>
+<span class=''> import path from &quot;node:path&quot;;</span>
+<span class=''> import { randomUUID } from &quot;node:crypto&quot;;</span>
+<span class='meta'>@@ -9,6 +10,7 @@ const app = express();</span>
+<span class=''> const port = Number(process.env.PORT ?? 3000);</span>
+<span class=''> const startedAt = Date.now();</span>
+<span class=''> </span>
+<span class='add'>+app.use(helmet());</span>
+<span class=''> app.use(requestContext);</span>
+<span class=''> app.use(morgan(&quot;tiny&quot;));</span>
+<span class=''> app.use(express.json({ limit: &quot;1mb&quot; }));</span></pre>
 
-    <h2>Not exploitable &mdash; no fix needed (1)</h2><p class='muted'>The scanner flagged these, but the app never reaches the vulnerable code.</p><div class='table-wrap'><table><thead><tr><th></th><th>Why no fix is needed</th><th>Severity</th><th>Type</th><th>Finding</th><th>File</th></tr></thead><tbody><tr class='o-fixed_verified'><td></td><td class='muted'>not reachable</td><td class='sev s-MEDIUM'>MEDIUM</td><td>MALWARE</td><td>Unsafe deserialization - can execute arbitrary code</td><td class='mono'>app.py</td></tr></tbody></table></div>
+    <h2>Not exploitable &mdash; no fix needed (2)</h2><p class='muted'>The scanner flagged these, but the app never reaches the vulnerable code.</p><div class='table-wrap'><table><thead><tr><th></th><th>Why no fix is needed</th><th>Severity</th><th>Type</th><th>Finding</th><th>File</th></tr></thead><tbody><tr class='o-still_present'><td></td><td class='muted'>not reachable</td><td class='sev s-MEDIUM'>MEDIUM</td><td>MALWARE</td><td>Unsafe deserialization - can execute arbitrary code</td><td class='mono'>docs-worker/app.py</td></tr><tr class='o-still_present'><td></td><td class='muted'>not reachable</td><td class='sev s-MEDIUM'>MEDIUM</td><td>CWE</td><td>File read on a path built from external input without resolving symlinks and validating the result stays inside the expected directory — CWE-59 symlink following.</td><td class='mono'>scripts/bootstrap.py</td></tr></tbody></table></div>
 
     
 
     <h2>How the fix went</h2>
-    <p><strong>Started with 1 bug to fix. Round 1 fixed 1 bug; 0 left. Done.</strong></p><div class='table-wrap'><table><thead><tr><th>Round</th><th>Started with</th><th>Fixed</th><th>Left</th><th>Time</th><th>How it ended</th></tr></thead><tbody><tr><td class='mono'>1</td><td class='mono'>1</td><td class='mono'>1</td><td class='mono'>0</td><td class='mono'>653.8s</td><td class='mono'>ran to completion</td></tr></tbody><tfoot><tr><th>Total</th><th class='mono'>1</th><th class='mono'>1</th><th class='mono'>0</th><th class='mono'>653.8s</th><th class='mono'>none killed</th></tr></tfoot></table></div><h3>Round 1: fixed 1 bug; 0 left</h3><ul><li><strong>MEDIUM</strong> File read on a path built from external input without resolving symlinks and validating the result stays inside the expected directory — CWE-59 symlink following. <span class='mono'>app.py</span></li></ul>
+    <p><strong>Started with 5 bugs to fix. Round 1 fixed 2 bugs; 3 left. Round 2 fixed 2 bugs; 1 left. 1 bug still open.</strong></p><div class='table-wrap'><table><thead><tr><th>Round</th><th>Started with</th><th>Fixed</th><th>Left</th><th>Time</th><th>How it ended</th></tr></thead><tbody><tr><td class='mono'>1</td><td class='mono'>5</td><td class='mono'>2</td><td class='mono'>3</td><td class='mono'>268.4s</td><td class='mono'>ran to completion</td></tr><tr><td class='mono'>2</td><td class='mono'>3</td><td class='mono'>2</td><td class='mono'>1</td><td class='mono'>320.8s</td><td class='mono'>ran to completion</td></tr></tbody><tfoot><tr><th>Total</th><th class='mono'>5</th><th class='mono'>4</th><th class='mono'>1</th><th class='mono'>589.2s</th><th class='mono'>none killed</th></tr></tfoot></table></div><h3>Round 1: fixed 2 bugs; 3 left</h3><ul><li><strong>MEDIUM</strong> Known vulnerability in morgan (GHSA-jxfw-x594-9x9m) <span class='mono'>portal/src/server.ts</span></li><li><strong>MEDIUM</strong> Known vulnerability in morgan (GHSA-9f6g-j8ch-79g4) <span class='mono'>portal/src/server.ts</span></li></ul><h3>Round 2: fixed 2 bugs; 1 left</h3><ul><li><strong>MEDIUM</strong> File read on a path built from external input without resolving symlinks and validating the result stays inside the expected directory — CWE-59 symlink following. <span class='mono'>docs-worker/app.py</span></li><li><strong>MEDIUM</strong> Express app without helmet - missing security headers <span class='mono'>portal/src/server.ts</span></li></ul>
 
     
 

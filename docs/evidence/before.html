@@ -56,20 +56,20 @@ td.mono{overflow-wrap:anywhere}
     
 
     <div class="cards">
-      <div class="card warnc"><div class="n">1</div>
+      <div class="card warnc"><div class="n">5</div>
         <div class="l">Exploitable</div></div>
-      <div class="card"><div class="n">1</div>
+      <div class="card"><div class="n">2</div>
         <div class="l">Not exploitable</div></div>
     </div>
 
-    <h2>Exploitable &mdash; 1 finding</h2>
+    <h2>Exploitable &mdash; 5 findings</h2>
     <p class="muted">REACHABLE handed these to the AI to fix.</p>
     <div class='table-wrap'><table><thead><tr><th>#</th><th>Severity</th><th>Type</th><th>Finding</th>
-    <th>File</th></tr></thead><tbody><tr><td class='mono'>1</td><td class='sev s-MEDIUM'>MEDIUM</td><td>CWE</td><td>File read on a path built from external input without resolving symlinks and validating the result stays inside the expected directory — CWE-59 symlink following.</td><td class='mono'>app.py</td></tr></tbody></table></div>
-    <h2>Not exploitable &mdash; no fix needed (1)</h2><p class='muted'>The scanner flagged these, but the app never reaches them or they are not part of the running app.</p><div class='table-wrap'><table><thead><tr><th></th><th>Why no fix is needed</th><th>Severity</th><th>Type</th><th>Finding</th><th>File</th></tr></thead><tbody><tr><td class='mono'>1</td><td class='muted'>not reachable</td><td class='sev s-MEDIUM'>MEDIUM</td><td>MALWARE</td><td>Unsafe deserialization - can execute arbitrary code</td><td class='mono'>app.py</td></tr></tbody></table></div>
+    <th>File</th></tr></thead><tbody><tr><td class='mono'>1</td><td class='sev s-CRITICAL'>CRITICAL</td><td>CWE</td><td>User input in HTML template literal — CWE-79 XSS risk</td><td class='mono'>portal/public/app.js</td></tr><tr><td class='mono'>2</td><td class='sev s-MEDIUM'>MEDIUM</td><td>CWE</td><td>File read on a path built from external input without resolving symlinks and validating the result stays inside the expected directory — CWE-59 symlink following.</td><td class='mono'>docs-worker/app.py</td></tr><tr><td class='mono'>3</td><td class='sev s-MEDIUM'>MEDIUM</td><td>CVE</td><td>Known vulnerability in morgan (GHSA-jxfw-x594-9x9m)</td><td class='mono'>portal/src/server.ts</td></tr><tr><td class='mono'>4</td><td class='sev s-MEDIUM'>MEDIUM</td><td>CVE</td><td>Known vulnerability in morgan (GHSA-9f6g-j8ch-79g4)</td><td class='mono'>portal/src/server.ts</td></tr><tr><td class='mono'>5</td><td class='sev s-MEDIUM'>MEDIUM</td><td>CWE</td><td>Express app without helmet - missing security headers</td><td class='mono'>portal/src/server.ts</td></tr></tbody></table></div>
+    <h2>Not exploitable &mdash; no fix needed (2)</h2><p class='muted'>The scanner flagged these, but the app never reaches them or they are not part of the running app.</p><div class='table-wrap'><table><thead><tr><th></th><th>Why no fix is needed</th><th>Severity</th><th>Type</th><th>Finding</th><th>File</th></tr></thead><tbody><tr><td class='mono'>1</td><td class='muted'>not reachable</td><td class='sev s-MEDIUM'>MEDIUM</td><td>MALWARE</td><td>Unsafe deserialization - can execute arbitrary code</td><td class='mono'>docs-worker/app.py</td></tr><tr><td class='mono'>2</td><td class='muted'>not reachable</td><td class='sev s-MEDIUM'>MEDIUM</td><td>CWE</td><td>File read on a path built from external input without resolving symlinks and validating the result stays inside the expected directory — CWE-59 symlink following.</td><td class='mono'>scripts/bootstrap.py</td></tr></tbody></table></div>
 
     <h2>How the fix went</h2>
-    <div class='table-wrap'><table><thead><tr><th>Round</th><th>Started with</th><th>Fixed</th><th>Left</th><th>Time</th><th>How it ended</th></tr></thead><tbody><tr><td class='mono'>1</td><td class='mono'>1</td><td class='mono'>1</td><td class='mono'>0</td><td class='mono'>653.8s</td><td class='mono'>ran to completion</td></tr></tbody><tfoot><tr><th>Total</th><th class='mono'>1</th><th class='mono'>1</th><th class='mono'>0</th><th class='mono'>653.8s</th><th class='mono'>none killed</th></tr></tfoot></table></div>
+    <div class='table-wrap'><table><thead><tr><th>Round</th><th>Started with</th><th>Fixed</th><th>Left</th><th>Time</th><th>How it ended</th></tr></thead><tbody><tr><td class='mono'>1</td><td class='mono'>5</td><td class='mono'>2</td><td class='mono'>3</td><td class='mono'>268.4s</td><td class='mono'>ran to completion</td></tr><tr><td class='mono'>2</td><td class='mono'>3</td><td class='mono'>2</td><td class='mono'>1</td><td class='mono'>320.8s</td><td class='mono'>ran to completion</td></tr></tbody><tfoot><tr><th>Total</th><th class='mono'>5</th><th class='mono'>4</th><th class='mono'>1</th><th class='mono'>589.2s</th><th class='mono'>none killed</th></tr></tfoot></table></div>
 
     <p class="muted"><a href="./fixed.html">After the fix &rarr;</a></p>
     <footer class="site-footer"><p>Learn more: <a href="https://sthenosec.com/airgap">https://sthenosec.com/airgap</a> &middot; Talk to us: <a href="mailto:sales@sthenosec.com">sales@sthenosec.com</a></p><p>&copy; 2026 Sthenos Security.</p></footer></main></body></html>
