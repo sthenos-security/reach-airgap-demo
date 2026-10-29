@@ -86,6 +86,8 @@ Step by step:
 6. **A second scan proves the fix.** The exploitable finding is gone: 0 left.
 7. **The results are published** to the pages above.
 
+**Protection in transit and at rest:** the software bundle is verified with a classical and a quantum-resistant signature; mirror and enclave evidence requests use Ed25519 signatures; transfer is encrypted; and the mirror can use mutual TLS (mTLS) when the customer enables it.
+
 ## Security measures
 
 | Measure | What it protects against |
