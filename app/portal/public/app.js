@@ -58,8 +58,9 @@ function renderAccounts(accounts) {
       account.name,
       account.bank_name,
       money.format(account.balance_cents / 100),
-      `<span class="pill">${account.status}</span>`
-    ])
+      account.status
+    ]),
+    [3]
   );
 }
 
@@ -86,9 +87,10 @@ function renderTransfers(transfers) {
       transfer.beneficiary,
       transfer.source_account,
       money.format(transfer.amount_cents / 100),
-      `<span class="pill">${escapeHtml(transfer.status)}</span>`,
+      transfer.status,
       transfer.requested_by
-    ])
+    ]),
+    [3]
   );
 }
 
@@ -108,12 +110,12 @@ function renderAudit(records) {
       .join("") || `<div class="subtle">No audit records yet</div>`;
 }
 
-function table(headers, rows) {
+function table(headers, rows, pillColumns = []) {
   if (!rows.length) {
     return `<div class="list"><div class="subtle">No records</div></div>`;
   }
   return `<table><thead><tr>${headers.map((header) => `<th>${escapeHtml(header)}</th>`).join("")}</tr></thead><tbody>${rows
-    .map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>`)
+    .map((row) => `<tr>${row.map((cell, index) => `<td>${pillColumns.includes(index) ? `<span class="pill">${escapeHtml(cell)}</span>` : escapeHtml(cell)}</td>`).join("")}</tr>`)
     .join("")}</tbody></table>`;
 }
 
