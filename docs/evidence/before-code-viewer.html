@@ -3389,8 +3389,9 @@ function renderAccounts(accounts) {
       account.name,
       account.bank_name,
       money.format(account.balance_cents / 100),
-      `&lt;span class=&quot;pill&quot;&gt;${account.status}&lt;/span&gt;`
-    ])
+      account.status
+    ]),
+    [3]
   );
 }
 
@@ -3417,9 +3418,10 @@ function renderTransfers(transfers) {
       transfer.beneficiary,
       transfer.source_account,
       money.format(transfer.amount_cents / 100),
-      `&lt;span class=&quot;pill&quot;&gt;${escapeHtml(transfer.status)}&lt;/span&gt;`,
+      transfer.status,
       transfer.requested_by
-    ])
+    ]),
+    [3]
   );
 }
 
@@ -3439,12 +3441,12 @@ function renderAudit(records) {
       .join(&quot;&quot;) || `&lt;div class=&quot;subtle&quot;&gt;No audit records yet&lt;/div&gt;`;
 }
 
-function table(headers, rows) {
+function table(headers, rows, pillColumns = []) {
   if (!rows.length) {
     return `&lt;div class=&quot;list&quot;&gt;&lt;div class=&quot;subtle&quot;&gt;No records&lt;/div&gt;&lt;/div&gt;`;
   }
   return `&lt;table&gt;&lt;thead&gt;&lt;tr&gt;${headers.map((header) =&gt; `&lt;th&gt;${escapeHtml(header)}&lt;/th&gt;`).join(&quot;&quot;)}&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;${rows
-    .map((row) =&gt; `&lt;tr&gt;${row.map((cell) =&gt; `&lt;td&gt;${cell}&lt;/td&gt;`).join(&quot;&quot;)}&lt;/tr&gt;`)
+    .map((row) =&gt; `&lt;tr&gt;${row.map((cell, index) =&gt; `&lt;td&gt;${pillColumns.includes(index) ? `&lt;span class=&quot;pill&quot;&gt;${escapeHtml(cell)}&lt;/span&gt;` : escapeHtml(cell)}&lt;/td&gt;`).join(&quot;&quot;)}&lt;/tr&gt;`)
     .join(&quot;&quot;)}&lt;/tbody&gt;&lt;/table&gt;`;
 }
 

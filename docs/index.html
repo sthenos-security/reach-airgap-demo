@@ -139,11 +139,10 @@
   <div class="wrap">
     <header>
       <div class="eyebrow">Sthenos Security · Reachable</div>
-      <h1>REACHABLE Air-Gap coaches coding agents toward secure code, then verifies the result.</h1>
-      <p class="lede">Inside the protected <b>enclave</b>, REACHABLE guides the coding agent toward
-        secure fixes for exploitable code and confirms the result with a second scan. The enclave has
-        no direct route to the internet; this recorded run used only its controlled gatekeeper for
-        approved security and model services. Every number below comes from that run.</p>
+      <h1>Found and fixed a real security bug, with the internet switched off.</h1>
+      <p class="lede">REACHABLE installed from signed software, scanned an application inside an
+        <b>enclave</b> — a network with no route to the internet — and an AI agent fixed the
+        exploitable bug. A second scan proves it. Every number below comes from that run.</p>
       <div class="kpis"><div class="kpi"><span class="kn">0</span><span class="kl">connections to the internet</span><span class="ks">A live test inside the network fails: there is no way out.</span></div><div class="kpi"><span class="kn">4 of 5</span><span class="kl">exploitable bugs fixed</span><span class="ks">Fixed by an AI coding agent, then proven by a second scan.</span></div><div class="kpi"><span class="kn">2</span><span class="kl">signatures verified on the software</span><span class="ks">Classic + quantum-resistant, checked before anything installs.</span></div></div>
       <div class="ctas"><a class="cta primary" href="evidence/fixed.html">See what was fixed</a><a class="cta primary" href="evidence/code-diff-viewer.html">See the code change</a><a class="cta" href="https://sthenosec.com/airgap">About REACHABLE Air-Gap</a></div>
     </header>
@@ -154,7 +153,7 @@
       <span class="big"><span class="pill ok">✓ Done</span></span>
       <span class="meta">AI model: <code>claude-opus-5-5 (api.anthropic.com), reached only through the gatekeeper</code></span>
       <span class="meta">Connections out: none</span>
-      <span class="meta">Generated 2026-10-29 21:30 UTC</span>
+      <span class="meta">Generated 2026-10-31 22:42 UTC</span>
     </div>
 
     <div class="tabs" role="tablist">
@@ -230,7 +229,7 @@
     <section class="panel">
       <h2>Installed in the enclave</h2>
       <p class="psub">REACHABLE installed from one signed bundle. <b>Signatures checked.</b> <b>No internet.</b></p>
-      <table class="regtable"><thead><tr><th>Component</th><th>Status</th><th>Version</th></tr></thead><tbody><tr><td>REACHABLE</td><td><span class="badge ok">✓ installed</span></td><td><code>REACHABLE 1.0.0b252</code></td></tr><tr><td>AI coding agent (opencode)</td><td><span class="badge ok">✓ installed</span></td><td><code>1.19.4</code></td></tr><tr><td>Gatekeeper (mirror)</td><td><span class="badge ok">✓ installed</span></td><td><code>running</code></td></tr><tr><td>Private npm registry (Verdaccio)</td><td><span class="badge ok">✓ installed</span></td><td><code>up, serving the enclave</code></td></tr><tr><td>Private PyPI registry (pypiserver)</td><td><span class="badge ok">✓ installed</span></td><td><code>up, serving the enclave</code></td></tr><tr><td>Private Go and Maven registry</td><td><span class="badge ok">✓ installed</span></td><td><code>up, serving the enclave</code></td></tr></tbody></table>
+      <table class="regtable"><thead><tr><th>Component</th><th>Status</th><th>Version</th></tr></thead><tbody><tr><td>REACHABLE</td><td><span class="badge ok">✓ installed</span></td><td><code>REACHABLE 1.0.0b258</code></td></tr><tr><td>AI coding agent (opencode)</td><td><span class="badge ok">✓ installed</span></td><td><code>1.19.4</code></td></tr><tr><td>Gatekeeper (mirror)</td><td><span class="badge ok">✓ installed</span></td><td><code>running</code></td></tr><tr><td>Private npm registry (Verdaccio)</td><td><span class="badge ok">✓ installed</span></td><td><code>up, serving the enclave</code></td></tr><tr><td>Private PyPI registry (pypiserver)</td><td><span class="badge ok">✓ installed</span></td><td><code>up, serving the enclave</code></td></tr><tr><td>Private Go and Maven registry</td><td><span class="badge ok">✓ installed</span></td><td><code>up, serving the enclave</code></td></tr></tbody></table>
     </section>
       <ol class="stages">
       <li class="stage ok">
@@ -266,7 +265,7 @@
           <div class="head"><span class="title">REACHABLE air-gap bundle deployed</span>
             <span class="badge ok">✓ Done</span></div>
           <p class="blurb">The signed software bundle was verified against the pinned root before installing; the licence and the security data rode the mirror.</p>
-          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">Bundle signature</span><span class="cval">CI-signed (ECDSA P-384 + ML-DSA-87, CNSA 2.0-aligned), verified against the pinned root; fingerprint 72b0090a4c50…</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">REACHABLE installed offline</span><span class="cval">REACHABLE 1.0.0b252</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Licence token</span><span class="cval">air-gap plan, signed JWT delivered by the mirror pull and imported in the enclave</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Security data</span><span class="cval">signed snapshot osv-2026-10-29-10</span></li></ul>
+          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">Bundle signature</span><span class="cval">CI-signed (ECDSA P-384 + ML-DSA-87, CNSA 2.0-aligned), verified against the pinned root; fingerprint fcfad7915091…</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">REACHABLE installed offline</span><span class="cval">REACHABLE 1.0.0b258</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Licence token</span><span class="cval">air-gap plan, signed JWT delivered by the mirror pull and imported in the enclave</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Security data</span><span class="cval">signed snapshot osv-2026-10-31-14</span></li></ul>
         </div>
       </li>
       <li class="stage ok">
@@ -302,7 +301,7 @@
           <div class="head"><span class="title">Every endpoint in use, answering</span>
             <span class="badge ok">✓ Done</span></div>
           <p class="blurb">Each address the run depended on, inside the enclave&#x27;s network and at Sthenos, and whether it answered.</p>
-          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">http://mirror:8443</span><span class="cval">gatekeeper model relay — the enclave&#x27;s only path to the AI model</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">http://mirror:8444</span><span class="cval">gatekeeper publish proxy — the enclave&#x27;s only path to Sthenos</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">http://registry-pypi:8080/simple/</span><span class="cval">private pypi registry, 1 packages</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">http://registry-npm:4873/</span><span class="cval">private npm registry, 156 packages</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">http://registry:8080/go</span><span class="cval">private go registry, 28 packages</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">https://sthenosec.com/api/v1/relay/snapshots/&lt;feed&gt;</span><span class="cval">security data in — osv-2026-10-29-10</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">https://sthenosec.com/api/v1/relay/license/current</span><span class="cval">licence in — air-gap plan</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">https://sthenosec.com/api/v1/relay/bundles/&lt;name&gt;</span><span class="cval">signed software in</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">https://sthenosec.com/api/v1/relay/scans/&lt;org&gt;</span><span class="cval">scan out — stored by Sthenos</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">https://sthenosec.com/api/v1/relay/attestations/&lt;org&gt;</span><span class="cval">fix ledger out</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">https://sthenosec.com/api/v1/relay/feedback/&lt;org&gt;</span><span class="cval">finding feedback out</span></li></ul>
+          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">http://mirror:8443</span><span class="cval">gatekeeper model relay — the enclave&#x27;s only path to the AI model</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">http://mirror:8444</span><span class="cval">gatekeeper publish proxy — the enclave&#x27;s only path to Sthenos</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">http://registry-pypi:8080/simple/</span><span class="cval">private pypi registry, 1 packages</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">http://registry-npm:4873/</span><span class="cval">private npm registry, 156 packages</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">http://registry:8080/go</span><span class="cval">private go registry, 28 packages</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">https://sthenosec.com/api/v1/relay/snapshots/&lt;feed&gt;</span><span class="cval">security data in — osv-2026-10-31-14</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">https://sthenosec.com/api/v1/relay/license/current</span><span class="cval">licence in — air-gap plan</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">https://sthenosec.com/api/v1/relay/bundles/&lt;name&gt;</span><span class="cval">signed software in</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">https://sthenosec.com/api/v1/relay/scans/&lt;org&gt;</span><span class="cval">scan out — stored by Sthenos</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">https://sthenosec.com/api/v1/relay/attestations/&lt;org&gt;</span><span class="cval">fix ledger out</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">https://sthenosec.com/api/v1/relay/feedback/&lt;org&gt;</span><span class="cval">finding feedback out</span></li></ul>
         </div>
       </li>
       </ol>
@@ -316,7 +315,7 @@ Suppressed exception at reachable/core/sysinfo.py:282 [reachable/core/sysinfo.py
 Suppressed exception at reachable/core/sysinfo.py:299 [reachable/core/sysinfo.py:283]: URLError: &lt;urlopen error [Errno 111] Connection refused&gt;
    OS:      Linux x86_64
    RAM:     7.7GB total, 6.6GB available
-   Disk:    11.0GB free (/root/.reachable)
+   Disk:    10.9GB free (/root/.reachable)
    GPU:     None detected
    Ollama:  not installed
 [2/6] Required Tools
@@ -325,10 +324,10 @@ Suppressed exception at reachable/core/sysinfo.py:299 [reachable/core/sysinfo.py
    Python 3.12
    syft 1.42.1
    grype 0.109.0
-[GUARDDOG] air-gap: top_go_packages.json is guarddog&#x27;s packaged list, 266 days old; network refresh disabled (a newer bundle updates it)
-[GUARDDOG] air-gap: top_npm_packages.json is guarddog&#x27;s packaged list, 266 days old; network refresh disabled (a newer bundle updates it)
-[GUARDDOG] air-gap: top_pypi_packages.json is guarddog&#x27;s packaged list, 266 days old; network refresh disabled (a newer bundle updates it)
-[GUARDDOG] air-gap: top_rubygems_packages.json is guarddog&#x27;s packaged list, 266 days old; network refresh disabled (a newer bundle updates it)
+[GUARDDOG] air-gap: top_go_packages.json is guarddog&#x27;s packaged list, 268 days old; network refresh disabled (a newer bundle updates it)
+[GUARDDOG] air-gap: top_npm_packages.json is guarddog&#x27;s packaged list, 268 days old; network refresh disabled (a newer bundle updates it)
+[GUARDDOG] air-gap: top_pypi_packages.json is guarddog&#x27;s packaged list, 268 days old; network refresh disabled (a newer bundle updates it)
+[GUARDDOG] air-gap: top_rubygems_packages.json is guarddog&#x27;s packaged list, 268 days old; network refresh disabled (a newer bundle updates it)
    semgrep 1.180.0
    guarddog 2.9.0
    gitleaks 8.30.1
