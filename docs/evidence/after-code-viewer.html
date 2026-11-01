@@ -93,7 +93,7 @@
     <p>22 files from the application.</p>
   </header>
   <main>
-    <nav><a href="#file-1">.gitignore</a><a href="#file-2">PROMPT.md</a><a href="#file-3">README.md</a><a href="#file-4">docs-worker/app.py</a><a href="#file-5">docs-worker/requirements.txt</a><a href="#file-6">docs-worker/test_app.py</a><a href="#file-7">payments-api/go.mod</a><a href="#file-8">payments-api/go.sum</a><a href="#file-9">payments-api/main.go</a><a href="#file-10">portal/package-lock.json</a><a href="#file-11">portal/package.json</a><a href="#file-12">portal/public/app.js</a><a href="#file-13">portal/public/index.html</a><a href="#file-14">portal/public/styles.css</a><a href="#file-15">portal/src/db.ts</a><a href="#file-16">portal/src/middleware.ts</a><a href="#file-17">portal/src/server.ts</a><a href="#file-18">portal/tsconfig.json</a><a href="#file-19">risk-api/README.md</a><a href="#file-20">risk-api/src/com/sthenos/treasury/RiskApi.java</a><a href="#file-21">scripts/bootstrap.py</a><a href="#file-22">scripts/schema.sql</a></nav>
+    <nav><a href="#file-1">.gitignore</a><a href="#file-2">PROMPT.md</a><a href="#file-3">README.md</a><a href="#file-4">docs-worker/app.py</a><a href="#file-5">docs-worker/requirements.txt</a><a href="#file-6">docs-worker/test_app_paths.py</a><a href="#file-7">payments-api/go.mod</a><a href="#file-8">payments-api/go.sum</a><a href="#file-9">payments-api/main.go</a><a href="#file-10">portal/package-lock.json</a><a href="#file-11">portal/package.json</a><a href="#file-12">portal/public/app.js</a><a href="#file-13">portal/public/index.html</a><a href="#file-14">portal/public/styles.css</a><a href="#file-15">portal/src/db.ts</a><a href="#file-16">portal/src/middleware.ts</a><a href="#file-17">portal/src/server.ts</a><a href="#file-18">portal/tsconfig.json</a><a href="#file-19">risk-api/README.md</a><a href="#file-20">risk-api/src/com/sthenos/treasury/RiskApi.java</a><a href="#file-21">scripts/bootstrap.py</a><a href="#file-22">scripts/schema.sql</a></nav>
     <div class="content">
             <section id="file-1" class="file">
               <h2>.gitignore</h2>
@@ -246,21 +246,19 @@ ROLE_RANK = {
 }
 
 
-def resolve_within_parent(configured: Path | None = None) -&gt; Path:
-    &quot;&quot;&quot;Resolve a configured file path, refusing symlinks that escape its directory.&quot;&quot;&quot;
-    configured = Path(configured if configured is not None else DB_PATH)
-    if &quot;..&quot; in configured.parts:
-        raise PermissionError(&quot;path must not contain parent-directory components&quot;)
-    trusted_root = configured.parent.resolve()
-    resolved = configured.resolve()
-    if not resolved.is_relative_to(trusted_root):
-        raise PermissionError(&quot;path resolves outside its configured directory&quot;)
+def resolve_within(path: Path, trusted_root: Path) -&gt; Path:
+    &quot;&quot;&quot;Resolve symlinks in ``path`` and require the result to stay inside ``trusted_root``.&quot;&quot;&quot;
+    root = Path(trusted_root).resolve()
+    resolved = Path(path).resolve()
+    if not resolved.is_relative_to(root):
+        raise ValueError(f&quot;path {path} resolves outside trusted root {root}&quot;)
     return resolved
 
 
 def connect() -&gt; sqlite3.Connection:
-    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(resolve_within_parent(DB_PATH))
+    db_path = resolve_within(DB_PATH, ROOT)
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     conn.execute(&quot;PRAGMA foreign_keys = ON&quot;)
     return conn
@@ -268,7 +266,7 @@ def connect() -&gt; sqlite3.Connection:
 
 def init_db() -&gt; None:
     with connect() as conn:
-        conn.executescript(resolve_within_parent(SCHEMA_PATH).read_text())
+        conn.executescript(resolve_within(SCHEMA_PATH, ROOT / &quot;scripts&quot;).read_text())
     UPLOAD_ROOT.mkdir(parents=True, exist_ok=True)
 
 
@@ -635,7 +633,7 @@ PyYAML==6.0.1
             </section>
             
             <section id="file-6" class="file">
-              <h2>docs-worker/test_app.py</h2>
+              <h2>docs-worker/test_app_paths.py</h2>
               
               <pre><code>import os
 import sqlite3
@@ -647,50 +645,57 @@ from unittest import mock
 import app
 
 
-class ResolveWithinParentTests(unittest.TestCase):
-    def setUp(self):
+class ResolveWithinTests(unittest.TestCase):
+    def setUp(self) -&gt; None:
         self._tmp = tempfile.TemporaryDirectory()
-        self.base = Path(self._tmp.name)
-        self.data_dir = self.base / &quot;data&quot;
-        self.data_dir.mkdir()
-        self.outside = self.base / &quot;outside&quot;
+        base = Path(self._tmp.name)
+        self.root = base / &quot;root&quot;
+        self.root.mkdir()
+        self.outside = base / &quot;outside&quot;
         self.outside.mkdir()
+        (self.outside / &quot;secret.txt&quot;).write_text(&quot;outside-data&quot;)
 
-    def tearDown(self):
+    def tearDown(self) -&gt; None:
         self._tmp.cleanup()
 
-    def test_regular_path_is_allowed(self):
-        target = self.data_dir / &quot;treasury.db&quot;
-        self.assertEqual(app.resolve_within_parent(target), target.resolve())
+    def test_legitimate_path_inside_root(self) -&gt; None:
+        target = self.root / &quot;data&quot; / &quot;treasury.db&quot;
+        self.assertEqual(app.resolve_within(target, self.root), target.resolve())
 
-    def test_symlink_escaping_directory_is_rejected(self):
-        secret = self.outside / &quot;secret.db&quot;
-        secret.write_text(&quot;inert&quot;)
-        link = self.data_dir / &quot;treasury.db&quot;
-        os.symlink(secret, link)
-        with self.assertRaises(PermissionError):
-            app.resolve_within_parent(link)
+    def test_rejects_dotdot_traversal(self) -&gt; None:
+        with self.assertRaises(ValueError):
+            app.resolve_within(self.root / &quot;..&quot; / &quot;outside&quot; / &quot;secret.txt&quot;, self.root)
 
-    def test_traversal_component_is_rejected(self):
-        with self.assertRaises(PermissionError):
-            app.resolve_within_parent(self.data_dir / &quot;sub&quot; / &quot;..&quot; / &quot;..&quot; / &quot;outside&quot; / &quot;x.db&quot;)
+    def test_rejects_absolute_path_outside_root(self) -&gt; None:
+        with self.assertRaises(ValueError):
+            app.resolve_within(self.outside / &quot;secret.txt&quot;, self.root)
 
-    def test_connect_refuses_symlinked_db(self):
-        secret = self.outside / &quot;secret.db&quot;
-        sqlite3.connect(secret).close()
-        link = self.data_dir / &quot;treasury.db&quot;
-        os.symlink(secret, link)
-        with mock.patch.object(app, &quot;DB_PATH&quot;, link):
-            with self.assertRaises(PermissionError):
+    def test_rejects_symlink_escaping_root(self) -&gt; None:
+        link = self.root / &quot;data&quot;
+        os.symlink(self.outside, link)
+        with self.assertRaises(ValueError):
+            app.resolve_within(link / &quot;secret.txt&quot;, self.root)
+
+    def test_connect_rejects_symlinked_db_dir(self) -&gt; None:
+        os.symlink(self.outside, self.root / &quot;data&quot;)
+        with mock.patch.object(app, &quot;ROOT&quot;, self.root), mock.patch.object(
+            app, &quot;DB_PATH&quot;, self.root / &quot;data&quot; / &quot;treasury.db&quot;
+        ):
+            with self.assertRaises(ValueError):
                 app.connect()
+        self.assertFalse((self.outside / &quot;treasury.db&quot;).exists())
 
-    def test_connect_works_for_legitimate_db(self):
-        with mock.patch.object(app, &quot;DB_PATH&quot;, self.data_dir / &quot;treasury.db&quot;):
+    def test_connect_legitimate_db_path(self) -&gt; None:
+        with mock.patch.object(app, &quot;ROOT&quot;, self.root), mock.patch.object(
+            app, &quot;DB_PATH&quot;, self.root / &quot;data&quot; / &quot;treasury.db&quot;
+        ):
             conn = app.connect()
             try:
                 self.assertEqual(conn.execute(&quot;SELECT 1&quot;).fetchone()[0], 1)
+                self.assertIs(conn.row_factory, sqlite3.Row)
             finally:
                 conn.close()
+        self.assertTrue((self.root / &quot;data&quot; / &quot;treasury.db&quot;).exists())
 
 
 if __name__ == &quot;__main__&quot;:
@@ -2776,7 +2781,7 @@ func nullText(value sql.NullString) string {
     },
     &quot;node_modules/morgan&quot;: {
       &quot;version&quot;: &quot;1.12.1&quot;,
-      &quot;resolved&quot;: &quot;http://registry-npm:4873/morgan/-/morgan-1.12.1.tgz&quot;,
+      &quot;resolved&quot;: &quot;https://registry.npmjs.org/morgan/-/morgan-1.12.1.tgz&quot;,
       &quot;integrity&quot;: &quot;sha512-tljKC0ex20AjO58Ob/eZ53JloycbVswbVNCHx6V6VLGzqt/w8dIynVGL0G8qVjNKwiA7sYSogCrN6QtJ82IV+g==&quot;,
       &quot;dependencies&quot;: {
         &quot;basic-auth&quot;: &quot;~2.0.1&quot;,
