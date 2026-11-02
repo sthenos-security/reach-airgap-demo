@@ -1,0 +1,11 @@
+REACHABLE air-gapped demo
+Copyright 2026 Sthenos Security, Inc.
+
+This repository is licensed under the Apache License, Version 2.0. See LICENSE.
+
+It uses the REACHABLE scanner and the REACHABLE CI toolkits, which are not
+covered by this license; each is governed by its own license terms.
+
+"REACHABLE", "Sthenos" and "Sthenos Security" are trademarks of Sthenos
+Security, Inc. The Apache License does not grant permission to use them
+(Apache License 2.0, Section 6).
