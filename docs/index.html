@@ -145,7 +145,7 @@
         the fixes; findings without a safe automated fix remain open for human review. This recorded
         run used a controlled gatekeeper for approved security and model services. Every number below
         comes from that run.</p>
-      <div class="kpis"><div class="kpi"><span class="kn">0</span><span class="kl">connections to the internet</span><span class="ks">A live test inside the network fails: there is no way out.</span></div><div class="kpi"><span class="kn">4 of 5</span><span class="kl">exploitable bugs fixed</span><span class="ks">Fixed by an AI coding agent, then proven by a second scan.</span></div><div class="kpi"><span class="kn">2</span><span class="kl">signatures verified on the software</span><span class="ks">Classic + quantum-resistant, checked before anything installs.</span></div></div>
+      <div class="kpis"><div class="kpi"><span class="kn">0</span><span class="kl">connections to the internet</span><span class="ks">A live test inside the network fails: there is no way out.</span></div><div class="kpi"><span class="kn">5 of 5</span><span class="kl">exploitable bugs fixed</span><span class="ks">Fixed by an AI coding agent, then proven by a second scan.</span></div><div class="kpi"><span class="kn">2</span><span class="kl">signatures verified on the software</span><span class="ks">Classic + quantum-resistant, checked before anything installs.</span></div></div>
       <div class="ctas"><a class="cta primary" href="evidence/fixed.html">See what was fixed</a><a class="cta primary" href="evidence/code-diff-viewer.html">See the code change</a><a class="cta" href="https://sthenosec.com/airgap">About REACHABLE Air-Gap</a></div>
     </header>
 
@@ -155,7 +155,7 @@
       <span class="big"><span class="pill ok">✓ Done</span></span>
       <span class="meta">AI model: <code>claude-opus-5-5 (api.anthropic.com), reached only through the gatekeeper</code></span>
       <span class="meta">Connections out: none</span>
-      <span class="meta">Generated 2026-11-01 18:47 UTC</span>
+      <span class="meta">Generated 2026-11-02 02:45 UTC</span>
     </div>
 
     <div class="tabs" role="tablist">
@@ -231,7 +231,7 @@
     <section class="panel">
       <h2>Installed in the enclave</h2>
       <p class="psub">REACHABLE installed from one signed bundle. <b>Signatures checked.</b> <b>No internet.</b></p>
-      <table class="regtable"><thead><tr><th>Component</th><th>Status</th><th>Version</th></tr></thead><tbody><tr><td>REACHABLE</td><td><span class="badge ok">✓ installed</span></td><td><code>REACHABLE 1.0.0b258</code></td></tr><tr><td>AI coding agent (opencode)</td><td><span class="badge ok">✓ installed</span></td><td><code>1.19.4</code></td></tr><tr><td>Gatekeeper (mirror)</td><td><span class="badge ok">✓ installed</span></td><td><code>running</code></td></tr><tr><td>Private npm registry (Verdaccio)</td><td><span class="badge ok">✓ installed</span></td><td><code>up, serving the enclave</code></td></tr><tr><td>Private PyPI registry (pypiserver)</td><td><span class="badge ok">✓ installed</span></td><td><code>up, serving the enclave</code></td></tr><tr><td>Private Go and Maven registry</td><td><span class="badge ok">✓ installed</span></td><td><code>up, serving the enclave</code></td></tr></tbody></table>
+      <table class="regtable"><thead><tr><th>Component</th><th>Status</th><th>Version</th></tr></thead><tbody><tr><td>REACHABLE</td><td><span class="badge ok">✓ installed</span></td><td><code>REACHABLE 1.0.0b260</code></td></tr><tr><td>AI coding agent (opencode)</td><td><span class="badge ok">✓ installed</span></td><td><code>1.19.4</code></td></tr><tr><td>Gatekeeper (mirror)</td><td><span class="badge ok">✓ installed</span></td><td><code>running</code></td></tr><tr><td>Private npm registry (Verdaccio)</td><td><span class="badge ok">✓ installed</span></td><td><code>up, serving the enclave</code></td></tr><tr><td>Private PyPI registry (pypiserver)</td><td><span class="badge ok">✓ installed</span></td><td><code>up, serving the enclave</code></td></tr><tr><td>Private Go and Maven registry</td><td><span class="badge ok">✓ installed</span></td><td><code>up, serving the enclave</code></td></tr></tbody></table>
     </section>
       <ol class="stages">
       <li class="stage ok">
@@ -267,7 +267,7 @@
           <div class="head"><span class="title">REACHABLE air-gap bundle deployed</span>
             <span class="badge ok">✓ Done</span></div>
           <p class="blurb">The signed software bundle was verified against the pinned root before installing; the licence and the security data rode the mirror.</p>
-          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">Bundle signature</span><span class="cval">CI-signed (ECDSA P-384 + ML-DSA-87, CNSA 2.0-aligned), verified against the pinned root; fingerprint fcfad7915091…</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">REACHABLE installed offline</span><span class="cval">REACHABLE 1.0.0b258</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Licence token</span><span class="cval">air-gap plan, signed JWT delivered by the mirror pull and imported in the enclave</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Security data</span><span class="cval">signed snapshot osv-2026-11-01-16</span></li></ul>
+          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">Bundle signature</span><span class="cval">CI-signed (ECDSA P-384 + ML-DSA-87, CNSA 2.0-aligned), verified against the pinned root; fingerprint ca11af010dab…</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">REACHABLE installed offline</span><span class="cval">REACHABLE 1.0.0b260</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Licence token</span><span class="cval">air-gap plan, signed JWT delivered by the mirror pull and imported in the enclave</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Security data</span><span class="cval">signed snapshot osv-2026-11-01-16</span></li></ul>
         </div>
       </li>
       <li class="stage ok">
@@ -391,9 +391,9 @@ Suppressed exception at reachable/core/credentials.py:1161 [reachable/core/crede
     <div class="rsum">
       <div class="rstat"><span class="rn">5</span><span class="rl">bugs an attacker can reach</span></div>
       <div class="rarrow">→</div>
-      <div class="rstat"><span class="rn ok">4</span><span class="rl">verified fixed</span></div>
+      <div class="rstat"><span class="rn ok">5</span><span class="rl">verified fixed</span></div>
       <div class="rarrow">→</div>
-      <div class="rstat"><span class="rn warn">1</span><span class="rl">still present</span></div>
+      <div class="rstat"><span class="rn ok">0</span><span class="rl">still present</span></div>
     </div>
     <p class="psub">Each fix is confirmed by a second scan. Anything the agent did not fix is shown as still present.</p>
       </div>
@@ -414,7 +414,7 @@ Suppressed exception at reachable/core/credentials.py:1161 [reachable/core/crede
           <div class="head"><span class="title">Exploitable findings remediated, then published</span>
             <span class="badge ok">✓ Done</span></div>
           <p class="blurb">An AI coding agent fixes the bugs an attacker can reach; a second scan confirms it; the result is published to the account.</p>
-          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">Exploitable findings worked on</span><span class="cval">5</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Confirmed fixed by a second scan</span><span class="cval">4 (1 still present)</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Published to the account</span><span class="cval">sthenos-airgap-demo</span></li></ul>
+          <ul class="passport"><li class="chk ok"><span class="mark">✓</span><span class="clabel">Exploitable findings worked on</span><span class="cval">5</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Confirmed fixed by a second scan</span><span class="cval">5 (0 still present)</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Every actionable finding fixed</span><span class="cval">0 still present</span></li><li class="chk ok"><span class="mark">✓</span><span class="clabel">Published to the account</span><span class="cval">sthenos-airgap-demo</span></li></ul>
         </div>
       </li>
       <li class="stage ok">
