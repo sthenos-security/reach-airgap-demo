@@ -1,5 +1,9 @@
 # REACHABLE — Air-Gapped Demo
 
+[![Live demo](https://img.shields.io/badge/live%20demo-open-2ea44f)](https://sthenos-security.github.io/reach-airgap-demo/)
+[![Air-gapped](https://img.shields.io/badge/network-air--gapped-informational)](#what-air-gapped-means-here)
+[![Sthenos Security](https://img.shields.io/badge/Sthenos%20Security-sthenosec.com-B22222)](https://sthenosec.com)
+
 ### ▶ [Open the demo status page](https://sthenos-security.github.io/reach-airgap-demo/)
 
 **What this shows:** REACHABLE found a real security bug in an application and
